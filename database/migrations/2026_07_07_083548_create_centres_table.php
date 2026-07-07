@@ -26,13 +26,13 @@ return new class extends Migration
                 ->references('id_region')
                 ->on('regions')
                 ->cascadeOnUpdate()
-                ->nullOnDelete();
+                ->restrictOnDelete();
 
             $table->foreign('matricule')
                 ->references('matricule')
-                ->on('utilisateurs')
+                ->on('users')
                 ->cascadeOnUpdate()
-                ->nullOnDelete();
+                ->restrictOnDelete();
             $table->timestamps();
         });
     }

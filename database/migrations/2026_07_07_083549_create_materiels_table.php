@@ -33,12 +33,12 @@ return new class extends Migration
                 ->references('id_sous_famille')
                 ->on('sous_familles')
                 ->cascadeOnUpdate()
-                ->nullOnDelete();
+                ->restrictOnDelete();
             $table->foreign('code_bureau')
                 ->references('code_bureau')
                 ->on('centres')
                 ->cascadeOnUpdate()
-                ->nullOnDelete();
+                ->restrictOnDelete();
             $table->timestamps();
         });
     }

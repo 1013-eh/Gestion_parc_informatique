@@ -19,7 +19,7 @@ return new class extends Migration
                   ->references('id_famille')
                   ->on('familles')
                   ->cascadeOnUpdate()
-                  ->nullOnDelete();
+                  ->restrictOnDelete();
             $table->timestamps();
         });
     }

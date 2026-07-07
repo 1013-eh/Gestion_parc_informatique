@@ -20,7 +20,7 @@ return new class extends Migration
                   ->references('num_serie')
                   ->on('materiels')
                   ->cascadeOnUpdate()
-                  ->nullOnDelete();
+                  ->restrictOnDelete();
             $table->timestamps();
         });
     }
