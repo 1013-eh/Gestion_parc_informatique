@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('archives', function (Blueprint $table) {
             $table->integer('id_archive')->primary();
-            $table->integer('num_serie');
+            $table->string('num_serie',15);
             $table->string('description',200);
             $table->date('date_archivage')->useCurrent();
             $table->foreign('num_serie')
