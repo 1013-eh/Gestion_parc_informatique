@@ -11,7 +11,11 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        // I added an error message if logged in with no email (through link for ex)
+        $middleware->redirectGuestsTo(function () {
+            session()->flash('error', 'Vous devez d\'abord vous connecter.');
+            return route('login');
+        });
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

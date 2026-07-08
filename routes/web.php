@@ -9,14 +9,15 @@ Route::get('/', function () {
 });
 
 // Materials Routes :
-Route::get('/materiels', [MaterielController::class, 'index'])->name('materiels.index');
-Route::get('/materiels/create', [MaterielController::class, 'create'])->name('materiels.create');
-Route::post('/materiels', [MaterielController::class, 'store'])->name('materiels.store');
+Route::middleware('auth')->group(function () {
+    Route::get('/materiels', [MaterielController::class, 'index'])->name('materiels.index');
+    Route::get('/materiels/create', [MaterielController::class, 'create'])->name('materiels.create');
+    Route::post('/materiels', [MaterielController::class, 'store'])->name('materiels.store');
 
-// For modifications :
-Route::get('/materiels/{materiel}/edit', [MaterielController::class, 'edit'])->name('materiels.edit');
-Route::patch('/materiels/{materiel}', [MaterielController::class, 'update'])->name('materiels.update');
-
+    // For modifications :
+    Route::get('/materiels/{materiel}/edit', [MaterielController::class, 'edit'])->name('materiels.edit');
+    Route::patch('/materiels/{materiel}', [MaterielController::class, 'update'])->name('materiels.update');
+});
 // End Of Materials Routes :
 
 Route::get('/dashboard', function () {
@@ -30,5 +31,7 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::resource('archive', ArchiveController::class);
+// archive for security can be changed to :
+// Route::middleware('auth')->resource('archive', ArchiveController::class);
 
 require __DIR__.'/auth.php';
