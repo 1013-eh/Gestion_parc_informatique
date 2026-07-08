@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Ajouter un matériel') }}
+            {{ __('Modifier un matériel') }}
         </h2>
     </x-slot>
 
@@ -9,14 +9,15 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    <form method="POST" action="{{ route('materiels.store') }}" class="space-y-6">
+                    <form method="POST" action="{{ route('materiels.update', $materiel->num_serie) }}" class="space-y-6">
+                        @method('PATCH')
                         @csrf
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             {{-- N° Série --}}
                             <div>
                                 <x-input-label for="num_serie" :value="__('N° Série')" />
-                                <x-text-input id="num_serie" class="block mt-1 w-full" type="text" name="num_serie" :value="old('num_serie')" required />
+                                <x-text-input id="num_serie" class="block mt-1 w-full" type="text" name="num_serie" :value="old('num_serie', $materiel->num_serie)" required />
                                 <x-input-error :messages="$errors->get('num_serie')" class="mt-2" />
                             </div>
 
@@ -26,7 +27,7 @@
                                 <select id="id_sous_famille" name="id_sous_famille" class="block mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
                                     <option value="">Sélectionner...</option>
                                     @foreach($sousFamilles as $sf)
-                                        <option value="{{ $sf->id_sous_famille }}" {{ old('id_sous_famille') == $sf->id_sous_famille ? 'selected' : '' }}>
+                                        <option value="{{ $sf->id_sous_famille }}" {{ old('id_sous_famille', $materiel->id_sous_famille) == $sf->id_sous_famille ? 'selected' : '' }}>
                                             {{ $sf->nom_sous_famille }}
                                         </option>
                                     @endforeach
@@ -40,7 +41,7 @@
                                 <select id="code_bureau" name="code_bureau" class="block mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
                                     <option value="">Sélectionner...</option>
                                     @foreach($centres as $c)
-                                        <option value="{{ $c->code_bureau }}" {{ old('code_bureau') == $c->code_bureau ? 'selected' : '' }}>
+                                        <option value="{{ $c->code_bureau }}" {{ old('code_bureau', $materiel->code_bureau) == $c->code_bureau ? 'selected' : '' }}>
                                             {{ $c->code_bureau }}
                                         </option>
                                     @endforeach
@@ -51,21 +52,21 @@
                             {{-- Marque --}}
                             <div>
                                 <x-input-label for="marque" :value="__('Marque')" />
-                                <x-text-input id="marque" class="block mt-1 w-full" type="text" name="marque" :value="old('marque')" required />
+                                <x-text-input id="marque" class="block mt-1 w-full" type="text" name="marque" :value="old('marque', $materiel->marque)" required />
                                 <x-input-error :messages="$errors->get('marque')" class="mt-2" />
                             </div>
 
                             {{-- Modèle --}}
                             <div>
                                 <x-input-label for="modele" :value="__('Modèle')" />
-                                <x-text-input id="modele" class="block mt-1 w-full" type="text" name="modele" :value="old('modele')" required />
+                                <x-text-input id="modele" class="block mt-1 w-full" type="text" name="modele" :value="old('modele', $materiel->modele)" required />
                                 <x-input-error :messages="$errors->get('modele')" class="mt-2" />
                             </div>
 
                             {{-- Date affectation --}}
                             <div>
                                 <x-input-label for="date_affectation" :value="__('Date d\'affectation')" />
-                                <x-text-input id="date_affectation" class="block mt-1 w-full" type="date" name="date_affectation" :value="old('date_affectation', date('Y-m-d'))" required />
+                                <x-text-input id="date_affectation" class="block mt-1 w-full" type="date" name="date_affectation" :value="old('date_affectation', $materiel->date_affectation)" required />
                                 <x-input-error :messages="$errors->get('date_affectation')" class="mt-2" />
                             </div>
 
@@ -73,9 +74,10 @@
                             <div>
                                 <x-input-label for="etat" :value="__('État')" />
                                 <select id="etat" name="etat" class="block mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
-                                    <option value="BON" {{ old('etat') == 'BON' ? 'selected' : '' }}>BON</option>
-                                    <option value="EN_PANNE" {{ old('etat') == 'EN_PANNE' ? 'selected' : '' }}>EN PANNE</option>
-                                    <option value="HORS_USAGE" {{ old('etat') == 'HORS_USAGE' ? 'selected' : '' }}>HORS USAGE</option>
+                                    <option value="BON" {{ old('etat', $materiel->etat) == 'BON' ? 'selected' : '' }}>BON</option>
+                                    <option value="EN_PANNE" {{ old('etat', $materiel->etat) == 'EN_PANNE' ? 'selected' : '' }}>EN PANNE</option>
+                                    <option value="HORS_USAGE" {{ old('etat', $materiel->etat) == 'HORS_USAGE' ? 'selected' : '' }}>HORS USAGE</option>
+                                    <option value="ARCHIVE" {{ old('etat', $materiel->etat) == 'ARCHIVE' ? 'selected' : '' }}>ARCHIVE</option>
                                 </select>
                                 <x-input-error :messages="$errors->get('etat')" class="mt-2" />
                             </div>
@@ -83,7 +85,7 @@
 
                         {{-- Buttons --}}
                         <div class="flex items-center gap-4">
-                            <x-primary-button>{{ __('Ajouter') }}</x-primary-button>
+                            <x-primary-button>{{ __('Modifier') }}</x-primary-button>
                             <a href="{{ route('materiels.index') }}">
                                 <x-secondary-button type="button">{{ __('Annuler') }}</x-secondary-button>
                             </a>

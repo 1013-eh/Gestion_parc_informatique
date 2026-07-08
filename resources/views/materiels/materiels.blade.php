@@ -21,6 +21,7 @@
                                     <th class="whitespace-nowrap px-4 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">N° Série</th>
                                     <th class="whitespace-nowrap px-4 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">Sous-Famille</th>
                                     <th class="whitespace-nowrap px-4 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">Bureau</th>
+                                    <th class="whitespace-nowrap px-4 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">Centre</th>
                                     <th class="whitespace-nowrap px-4 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">Marque</th>
                                     <th class="whitespace-nowrap px-4 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">Modèle</th>
                                     <th class="whitespace-nowrap px-4 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">CAB</th>
@@ -38,6 +39,7 @@
                                         <td class="px-4 py-3 font-medium whitespace-nowrap">{{ $m->num_serie }}</td>
                                         <td class="px-4 py-3 whitespace-nowrap">{{ $m->sousFamille?->nom_sous_famille ?? 'N/A' }}</td>
                                         <td class="px-4 py-3 whitespace-nowrap">{{ $m->code_bureau }}</td>
+                                        <td class="px-4 py-3 whitespace-nowrap">{{ $m->centre?->nom_centre ?? 'N/A' }}</td>
                                         <td class="px-4 py-3 whitespace-nowrap">{{ $m->marque }}</td>
                                         <td class="px-4 py-3 whitespace-nowrap">{{ $m->modele }}</td>
                                         <td class="px-4 py-3 whitespace-nowrap">{{ $m->cab }}</td>
@@ -56,7 +58,7 @@
                                         </td>
                                         <td class="px-4 py-3 whitespace-nowrap">
                                             <div class="flex space-x-2">
-                                                <a href="#" class="inline-flex items-center px-2.5 py-1.5 bg-yellow-500 text-white text-xs font-medium rounded hover:bg-yellow-600">
+                                                <a href="{{ route('materiels.edit', $m->num_serie) }}" class="inline-flex items-center px-2.5 py-1.5 bg-yellow-500 text-white text-xs font-medium rounded hover:bg-yellow-600">
                                                     Modifier
                                                 </a>
                                                 <!-- <form method="POST" action="#" onsubmit="return confirm('Confirmer la suppression ?')">

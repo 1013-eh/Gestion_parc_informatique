@@ -1,10 +1,7 @@
 <?php
 use App\Http\Controllers\ProfileController;
-<<<<<<< HEAD
-use App\Http\Controllers\MaterielController;
-=======
 use App\Http\Controllers\ArchiveController;
->>>>>>> origin/develop
+use App\Http\Controllers\MaterielController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -15,6 +12,10 @@ Route::get('/', function () {
 Route::get('/materiels', [MaterielController::class, 'index'])->name('materiels.index');
 Route::get('/materiels/create', [MaterielController::class, 'create'])->name('materiels.create');
 Route::post('/materiels', [MaterielController::class, 'store'])->name('materiels.store');
+
+// For modifications :
+Route::get('/materiels/{materiel}/edit', [MaterielController::class, 'edit'])->name('materiels.edit');
+Route::patch('/materiels/{materiel}', [MaterielController::class, 'update'])->name('materiels.update');
 
 // End Of Materials Routes :
 
@@ -28,9 +29,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-<<<<<<< HEAD
-=======
 Route::resource('archive', ArchiveController::class);
 
->>>>>>> origin/develop
 require __DIR__.'/auth.php';

@@ -12,11 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('materiels', function (Blueprint $table) {
-<<<<<<< HEAD
-            $table->string('num_serie', 15)->primary();
-=======
             $table->string('num_serie',15)->primary();
->>>>>>> origin/develop
             $table->unsignedInteger('id_sous_famille');
             $table->integer('code_bureau');
             $table->string('marque', 30);

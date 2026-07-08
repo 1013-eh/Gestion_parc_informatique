@@ -13,11 +13,7 @@ return new class extends Migration
     {
         Schema::create('archives', function (Blueprint $table) {
             $table->integer('id_archive')->primary()->autoIncrement();
-<<<<<<< HEAD
-            $table->string('num_serie', 15);
-=======
             $table->string('num_serie',15);
->>>>>>> origin/develop
             $table->string('description',200);
             $table->date('date_archivage');
             $table->foreign('num_serie')
