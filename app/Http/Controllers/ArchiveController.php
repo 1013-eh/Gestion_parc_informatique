@@ -97,7 +97,8 @@ class ArchiveController extends Controller
         $validated = $request->validate([
             'num_serie' => [
                 'required',
-                'integer',
+                'string',
+                'regex:/^SN\d{8}$/',
                 function ($attribute, $value, $fail) {
                     $materiel = Materiel::find($value);
 
