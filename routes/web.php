@@ -1,7 +1,10 @@
 <?php
-
 use App\Http\Controllers\ProfileController;
+<<<<<<< HEAD
 use App\Http\Controllers\MaterielController;
+=======
+use App\Http\Controllers\ArchiveController;
+>>>>>>> origin/develop
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -25,4 +28,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+<<<<<<< HEAD
+=======
+Route::resource('archive', ArchiveController::class);
+
+>>>>>>> origin/develop
 require __DIR__.'/auth.php';

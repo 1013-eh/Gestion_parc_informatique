@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('num_serie',15);
 >>>>>>> origin/develop
             $table->string('description',200);
-            $table->date('date_archivage')->useCurrent();
+            $table->date('date_archivage');
             $table->foreign('num_serie')
                   ->references('num_serie')
                   ->on('materiels')
