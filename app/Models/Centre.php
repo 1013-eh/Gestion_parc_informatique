@@ -10,7 +10,7 @@ class Centre extends Model
     public $incrementing = false;
     protected $keyType = 'int';
 
-    protected $fillable = ['code_bureau', 'id_region', 'matricule', 'adresse_ip', 'dernier_num_ordre', 'type_consultation'];
+    protected $fillable = ['code_bureau', 'nom_centre', 'id_region', 'matricule', 'adresse_ip', 'dernier_num_ordre', 'type_consultation'];
 
     public function region()
     {

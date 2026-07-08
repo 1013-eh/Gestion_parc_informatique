@@ -13,6 +13,10 @@ Route::get('/materiels', [MaterielController::class, 'index'])->name('materiels.
 Route::get('/materiels/create', [MaterielController::class, 'create'])->name('materiels.create');
 Route::post('/materiels', [MaterielController::class, 'store'])->name('materiels.store');
 
+// For modifications :
+Route::get('/materiels/{materiel}/edit', [MaterielController::class, 'edit'])->name('materiels.edit');
+Route::patch('/materiels/{materiel}', [MaterielController::class, 'update'])->name('materiels.update');
+
 // End Of Materials Routes :
 
 Route::get('/dashboard', function () {
@@ -25,7 +29,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::resource('archive', ArchiveController::class);
 Route::get('/archive/create/{num_serie}', [ArchiveController::class, 'createForm'])->name('archive.createForm');
 Route::resource('archive', ArchiveController::class);
 
