@@ -23,11 +23,26 @@ class ArchiveController extends Controller
     }
 
     // formulaire d'ajout
-    public function create()
+    public function create(Request $request)
     {
-        return view('archive.create');
+        $search = $request->input('search');
+        $materiels = Materiel::where('etat', 'HORS_USAGE')
+           ->when($search, function ($query, $search) {
+               $query->where('num_serie', 'like', "%{$search}%");
+            })
+            ->orderBy('num_serie')
+            ->get();
+
+        return view('archive.create', compact('materiels', 'search'));
     }
 
+    public function createForm($num_serie)
+    {
+        $materiel = Materiel::where('num_serie', $num_serie)
+            ->where('etat', 'HORS_USAGE')
+            ->firstOrFail();
+        return view('archive.createForm', compact('materiel'));
+    }
     // AJOUTER
     public function store(Request $request)
     {

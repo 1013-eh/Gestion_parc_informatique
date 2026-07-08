@@ -26,5 +26,7 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::resource('archive', ArchiveController::class);
+Route::get('/archive/create/{num_serie}', [ArchiveController::class, 'createForm'])->name('archive.createForm');
+Route::resource('archive', ArchiveController::class);
 
 require __DIR__.'/auth.php';
