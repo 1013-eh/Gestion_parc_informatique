@@ -6,6 +6,7 @@ use App\Models\Archive;
 use App\Models\Materiel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\QueryException;
 
 class ArchiveController extends Controller
@@ -68,7 +69,15 @@ class ArchiveController extends Controller
         $validated['date_archivage'] = now()->toDateString();
 
         try {
-            Archive::create($validated);
+            DB::transaction(function () use ($validated) {
+                Archive::create($validated);
+
+                // Le matériel archivé ne doit plus être HORS_USAGE,
+                // sinon il pourrait être archivé une seconde fois.
+                Materiel::where('num_serie', $validated['num_serie'])
+                    ->update(['etat' => 'ARCHIVE']);
+            });
+
             return redirect()->route('archive.index')->with('success', 'Archive ajoutée avec succès.');
         } catch (QueryException $e) {
             Log::error('Erreur lors de l\'ajout d\'une archive: ' . $e->getMessage());

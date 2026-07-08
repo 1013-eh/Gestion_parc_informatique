@@ -23,7 +23,7 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Regions') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                    <x-nav-link :href="route('materiels.index')" :active="request()->routeIs('dashboard')">
                         {{ __('Liste materielles informatique') }}
                     </x-nav-link>
                     <x-nav-link :href="route('archive.index')" :active="request()->routeIs('archive.*')">
