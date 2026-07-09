@@ -29,7 +29,7 @@ return new class extends Migration
 
             $table->foreign('id_marque')
                 ->references('id_marque')
-                ->on('marque')
+                ->on('marques')
                 ->cascadeOnUpdate()
                 ->restrictOnDelete();
             $table->foreign('code_bureau')
