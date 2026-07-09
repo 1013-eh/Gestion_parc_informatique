@@ -2,6 +2,8 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ArchiveController;
 use App\Http\Controllers\MaterielController;
+use App\Http\Controllers\FamilleController;
+use App\Http\Controllers\SousFamilleController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -34,5 +36,11 @@ Route::get('/archive/create/{num_serie}', [ArchiveController::class, 'createForm
 Route::resource('archive', ArchiveController::class);
 // archive for security can be changed to :
 // Route::middleware('auth')->resource('archive', ArchiveController::class);
+
+require __DIR__.'/auth.php';
+Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function(){
+    Route::resource('familles', FamilleController::class);
+    Route::resource('sous_familles', SousFamilleController::class);
+});
 
 require __DIR__.'/auth.php';

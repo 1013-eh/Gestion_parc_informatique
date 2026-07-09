@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('email_perso',50)->unique();
             $table->rememberToken();
             $table->enum('etat',['ACTIVE','RETRAITE']);
+            $table->string('email_perso',50)->unique();
             $table->timestamps();
         });
 
