@@ -12,7 +12,11 @@ class Materiel extends Model
     protected $keyType = 'string';
 
     protected $fillable = [
+<<<<<<< HEAD
         'num_serie', 'id_sous_famille', 'code_bureau', 'marque', 'modele',
+=======
+        'num_serie', 'id_modele', 'code_bureau',
+>>>>>>> 1b28a70 (Fix MaterielController and Materiel model for id_marque schema change)
         'cab', 'num_marche', 'date_affectation', 'num_ordre', 'machine', 'etat'
     ];
 
