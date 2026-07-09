@@ -11,7 +11,6 @@ class Famille extends Model
 
     public function sousFamilles()
     {
-        return $this->hasMany(SousFamille::class, 'id_famille');
-
+        return $this->hasMany(SousFamille::class, 'id_famille', 'id_famille' );
     }
 }
