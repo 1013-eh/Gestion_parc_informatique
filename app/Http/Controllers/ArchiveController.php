@@ -6,6 +6,7 @@ use App\Models\Archive;
 use App\Models\Materiel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\QueryException;
 
 class ArchiveController extends Controller
@@ -23,11 +24,26 @@ class ArchiveController extends Controller
     }
 
     // formulaire d'ajout
-    public function create()
+    public function create(Request $request)
     {
-        return view('archive.create');
+        $search = $request->input('search');
+        $materiels = Materiel::where('etat', 'HORS_USAGE')
+           ->when($search, function ($query, $search) {
+               $query->where('num_serie', 'like', "%{$search}%");
+            })
+            ->orderBy('num_serie')
+            ->get();
+
+        return view('archive.create', compact('materiels', 'search'));
     }
 
+    public function createForm($num_serie)
+    {
+        $materiel = Materiel::where('num_serie', $num_serie)
+            ->where('etat', 'HORS_USAGE')
+            ->firstOrFail();
+        return view('archive.createForm', compact('materiel'));
+    }
     // AJOUTER
     public function store(Request $request)
     {
@@ -53,7 +69,15 @@ class ArchiveController extends Controller
         $validated['date_archivage'] = now()->toDateString();
 
         try {
-            Archive::create($validated);
+            DB::transaction(function () use ($validated) {
+                Archive::create($validated);
+
+                // Le matériel archivé ne doit plus être HORS_USAGE,
+                // sinon il pourrait être archivé une seconde fois.
+                Materiel::where('num_serie', $validated['num_serie'])
+                    ->update(['etat' => 'ARCHIVE']);
+            });
+
             return redirect()->route('archive.index')->with('success', 'Archive ajoutée avec succès.');
         } catch (QueryException $e) {
             Log::error('Erreur lors de l\'ajout d\'une archive: ' . $e->getMessage());
@@ -82,7 +106,9 @@ class ArchiveController extends Controller
             return redirect()->route('archive.index')->with('error', "Archive introuvable.");
         }
 
-        return view('archive.edit', compact('archive'));
+        $materiel = Materiel::find($archive->num_serie);
+
+        return view('archive.edit', compact('archive', 'materiel'));
     }
 
     // MODIFIER
@@ -98,22 +124,41 @@ class ArchiveController extends Controller
             'num_serie' => [
                 'required',
                 'string',
-                'regex:/^SN\d{8}$/',
+                'regex:/^SN \d{8}$/',
                 function ($attribute, $value, $fail) {
-                    $materiel = Materiel::find($value);
-
-                    if (!$materiel) {
+                    // Ici on modifie une archive existante : le matériel lié
+                    // est normalement déjà à l'état ARCHIVE, donc on vérifie
+                    // seulement qu'il existe (pas d'exigence HORS_USAGE).
+                    if (!Materiel::find($value)) {
                         $fail("Ce numéro de série n'existe pas dans la table matériel.");
-                    } elseif ($materiel->etat !== 'HORS_USAGE') {
-                        $fail("Ce matériel doit avoir le statut HORS_USAGE pour être archivé. Statut actuel : {$materiel->etat}.");
                     }
                 },
             ],
             'description' => 'required|string|max:200',
+            'etat' => 'required|in:ARCHIVE,BON,EN_PANNE,HORS_USAGE',
         ]);
 
         try {
-            $archive->update($validated);
+            DB::transaction(function () use ($archive, $validated) {
+                $materiel = Materiel::find($validated['num_serie']);
+                if ($materiel) {
+                    $materiel->etat = $validated['etat'];
+                    $materiel->save();
+                }
+
+                if ($validated['etat'] === 'ARCHIVE') {
+                    // Reste archivé : on met juste à jour les infos de l'archive.
+                    $archive->update([
+                        'num_serie'   => $validated['num_serie'],
+                        'description' => $validated['description'],
+                    ]);
+                } else {
+                    // N'est plus archivé : il retourne dans la table matériels
+                    // et disparaît de la liste des archives.
+                    $archive->delete();
+                }
+            });
+
             return redirect()->route('archive.index')->with('success', 'Archive modifiée avec succès.');
         } catch (QueryException $e) {
             Log::error('Erreur lors de la modification: ' . $e->getMessage());

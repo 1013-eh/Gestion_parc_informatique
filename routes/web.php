@@ -30,6 +30,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::get('/archive/create/{num_serie}', [ArchiveController::class, 'createForm'])->name('archive.createForm');
 Route::resource('archive', ArchiveController::class);
 // archive for security can be changed to :
 // Route::middleware('auth')->resource('archive', ArchiveController::class);
