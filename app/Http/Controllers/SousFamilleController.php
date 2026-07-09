@@ -49,7 +49,8 @@ class SousFamilleController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $sousFamille = SousFamille::findOrFail($id);
+        return view('admin.sous_familles.show', compact('sousfamille'));
     }
 
     /**

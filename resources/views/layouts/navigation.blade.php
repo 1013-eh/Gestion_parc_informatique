@@ -17,7 +17,7 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('admin.familles.index')" :active="request()->routeIs('dashboard')">
+                    <x-nav-link :href="route('admin.familles.index')" :active="request()->routeIs('admin.familles.index')">
                         {{ __('Famille & Sous-Fammilles') }}
                     </x-nav-link>
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
@@ -91,6 +91,7 @@
         <div class="pt-4 pb-1 border-t border-gray-200">
             <div class="px-4">
                 <div class="font-medium text-base text-gray-800">{{ Auth::user()->nom }}</div>
+                <div class="font-medium text-base text-gray-800">{{ Auth::user()->prenom }}</div>
                 <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
             </div>
 

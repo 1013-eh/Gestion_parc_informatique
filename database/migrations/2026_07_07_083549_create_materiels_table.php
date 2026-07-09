@@ -13,10 +13,8 @@ return new class extends Migration
     {
         Schema::create('materiels', function (Blueprint $table) {
             $table->string('num_serie',15)->primary();
-            $table->unsignedInteger('id_sous_famille');
+            $table->unsignedInteger('id_modele');
             $table->integer('code_bureau');
-            $table->string('marque', 30);
-            $table->string('modele', 30);
             $table->string('cab', 30)->unique();
             $table->string('num_marche', 30)->unique();
             $table->date('date_affectation')->useCurrent();
@@ -29,9 +27,9 @@ return new class extends Migration
                 'ARCHIVE'
             ]);
 
-            $table->foreign('id_sous_famille')
-                ->references('id_sous_famille')
-                ->on('sous_familles')
+            $table->foreign('id_modele')
+                ->references('id_modele')
+                ->on('modeles')
                 ->cascadeOnUpdate()
                 ->restrictOnDelete();
             $table->foreign('code_bureau')

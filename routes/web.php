@@ -3,6 +3,8 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\FamilleController;
 use App\Http\Controllers\SousFamilleController;
+use App\Http\Controllers\MarqueController;
+use App\Http\Controllers\ModeleController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -19,9 +21,21 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function(){
+Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
     Route::resource('familles', FamilleController::class);
     Route::resource('sous_familles', SousFamilleController::class);
+    Route::resource('marques', MarqueController::class);
+    Route::resource('modeles', ModeleController::class);
 });
 
-require __DIR__.'/auth.php';
+Route::get('familles/{id}/sous_familles', function($id) {
+    $sousFamilles = \App\Models\SousFamille::where('id_famille', $id)->get();
+    return response()->json($sousFamilles);
+})->name('admin.familles.sous_familles');
+
+Route::get('sous_familles/{id}/marques', function($id) {
+    $marques = \App\Models\Marque::where('id_sous_famille', $id)->get();
+    return response()->json($marques);
+})->name('admin.sous_familles.marques');
+
+require __DIR__ . '/auth.php';

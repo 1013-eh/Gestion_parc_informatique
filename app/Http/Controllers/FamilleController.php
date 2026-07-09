@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Models\sousFamille;
 use App\Models\Famille;
 use Illuminate\Http\Request;
 
@@ -12,7 +12,7 @@ class FamilleController extends Controller
      */
     public function index()
     {
-        $familles = Famille::with('sousFamilles')->get();
+        $familles = Famille::with('sousFamilles.marques.modeles')->get();
         return view('admin.familles.index', compact('familles'));
     }
 
