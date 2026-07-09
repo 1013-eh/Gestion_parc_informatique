@@ -49,11 +49,11 @@
                             @forelse ($materiels as $m)
                                 <tr class="{{ $loop->even ? 'bg-gray-50' : 'bg-white' }} hover:bg-blue-50 transition-colors divide-x divide-gray-200">
                                     <td class="px-4 py-4 text-sm font-medium text-gray-900 whitespace-nowrap">{{ $m->num_serie }}</td>
-                                    <td class="px-4 py-4 text-sm text-gray-700 whitespace-nowrap">{{ $m->sousFamille?->nom_sous_famille ?? 'N/A' }}</td>
+                                    <td class="px-4 py-4 text-sm text-gray-700 whitespace-nowrap">{{ $m->modele?->marque?->sousFamille?->nom_sous_famille ?? 'N/A' }}</td>
                                     <td class="px-4 py-4 text-sm text-gray-700 whitespace-nowrap">{{ $m->code_bureau }}</td>
                                     <td class="px-4 py-4 text-sm text-gray-700 whitespace-nowrap">{{ $m->centre?->nom_centre ?? 'N/A' }}</td>
-                                    <td class="px-4 py-4 text-sm text-gray-700 whitespace-nowrap">{{ $m->marque }}</td>
-                                    <td class="px-4 py-4 text-sm text-gray-700 whitespace-nowrap">{{ $m->modele }}</td>
+                                    <td class="px-4 py-4 text-sm text-gray-700 whitespace-nowrap">{{ $m->modele?->marque?->nom_marque ?? 'N/A' }}</td>
+                                    <td class="px-4 py-4 text-sm text-gray-700 whitespace-nowrap">{{ $m->modele?->nom_modele ?? 'N/A' }}</td>
                                     <td class="px-4 py-4 text-sm text-gray-700 whitespace-nowrap">{{ $m->cab }}</td>
                                     <td class="px-4 py-4 text-sm text-gray-700 whitespace-nowrap">{{ $m->num_marche }}</td>
                                     <td class="px-4 py-4 text-sm text-gray-500 whitespace-nowrap">{{ $m->date_affectation }}</td>

@@ -21,8 +21,8 @@
 
                 <div class="mb-6 p-4 bg-gray-50 rounded border border-gray-200 space-y-1">
                     <p><span class="font-medium">N° Série :</span> {{ $materiel->num_serie }}</p>
-                    <p><span class="font-medium">Marque :</span> {{ $materiel->marque }}</p>
-                    <p><span class="font-medium">Modèle :</span> {{ $materiel->modele }}</p>
+                    <p><span class="font-medium">Marque :</span> {{ $materiel->modele?->marque?->nom_marque ?? 'N/A' }}</p>
+                    <p><span class="font-medium">Modèle :</span> {{ $materiel->modele?->nom_modele ?? 'N/A' }}</p>
                 </div>
 
                 <form action="{{ route('archive.store') }}" method="POST" class="space-y-4">

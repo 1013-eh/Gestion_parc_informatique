@@ -27,9 +27,10 @@ class ArchiveController extends Controller
     public function create(Request $request)
     {
         $search = $request->input('search');
-        $materiels = Materiel::where('etat', 'HORS_USAGE')
-           ->when($search, function ($query, $search) {
-               $query->where('num_serie', 'like', "%{$search}%");
+        $materiels = Materiel::with('modele.marque')
+            ->where('etat', 'HORS_USAGE')
+            ->when($search, function ($query, $search) {
+                $query->where('num_serie', 'like', "%{$search}%");
             })
             ->orderBy('num_serie')
             ->get();
@@ -39,7 +40,8 @@ class ArchiveController extends Controller
 
     public function createForm($num_serie)
     {
-        $materiel = Materiel::where('num_serie', $num_serie)
+        $materiel = Materiel::with('modele.marque')
+            ->where('num_serie', $num_serie)
             ->where('etat', 'HORS_USAGE')
             ->firstOrFail();
         return view('archive.createForm', compact('materiel'));
@@ -51,7 +53,7 @@ class ArchiveController extends Controller
             'num_serie' => [
                 'required',
                 'string',
-                'regex:/^SN \d{8}$/',
+                'regex:/^SN [A-Z0-9]{8}$/',
                 function ($attribute, $value, $fail) {
                     $materiel = Materiel::find($value);
 
@@ -106,7 +108,7 @@ class ArchiveController extends Controller
             return redirect()->route('archive.index')->with('error', "Archive introuvable.");
         }
 
-        $materiel = Materiel::find($archive->num_serie);
+        $materiel = Materiel::with('modele.marque')->find($archive->num_serie);
 
         return view('archive.edit', compact('archive', 'materiel'));
     }
@@ -124,7 +126,7 @@ class ArchiveController extends Controller
             'num_serie' => [
                 'required',
                 'string',
-                'regex:/^SN \d{8}$/',
+                'regex:/^SN [A-Z0-9]{8}$/',
                 function ($attribute, $value, $fail) {
                     // Ici on modifie une archive existante : le matériel lié
                     // est normalement déjà à l'état ARCHIVE, donc on vérifie
