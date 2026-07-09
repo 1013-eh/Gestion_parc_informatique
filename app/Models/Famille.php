@@ -9,6 +9,6 @@ class Famille extends Model
     protected $fillable = ['nom_famille'];
 
     public function sousFamilles(){
-        return $this->hasMany(SousFamille::class);
+        return $this->hasMany(SousFamille::class, 'ID_FAMILLE', 'ID_FAMILLE');
     }
 }

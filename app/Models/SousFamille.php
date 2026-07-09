@@ -13,6 +13,6 @@ class SousFamille extends Model
     }
 
     public function materiels(){
-        return $this->hasMany(Materiel::class);
+        return $this->hasMany(Materiel::class, 'ID_FAMILLE', 'ID_FAMILLE');
     }
 }
