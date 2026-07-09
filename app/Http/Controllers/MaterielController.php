@@ -12,8 +12,10 @@ class MaterielController extends Controller
 {
     public function index()
     {
-        $materiels = Materiel::all();
-        $materiels = Materiel::with('sousFamille')->get();
+        $materiels = Materiel::with('sousFamille')
+            ->where('etat', '!=', 'ARCHIVE')
+            ->get();
+
         return view('materiels/materiels', compact('materiels'));
     }
 

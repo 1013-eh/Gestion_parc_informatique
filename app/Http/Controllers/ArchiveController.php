@@ -51,7 +51,7 @@ class ArchiveController extends Controller
             'num_serie' => [
                 'required',
                 'string',
-                'regex:/^SN\d{8}$/',
+                'regex:/^SN \d{8}$/',
                 function ($attribute, $value, $fail) {
                     $materiel = Materiel::find($value);
 
