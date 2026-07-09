@@ -40,8 +40,8 @@
                             @forelse($materiels as $materiel)
                                 <tr class="border-t hover:bg-gray-50">
                                     <td class="p-3 border-r">{{ $materiel->num_serie }}</td>
-                                    <td class="p-3 border-r">{{ $materiel->marque }}</td>
-                                    <td class="p-3 border-r">{{ $materiel->modele }}</td>
+                                    <td class="p-3 border-r">{{ $materiel->modele?->marque?->nom_marque ?? 'N/A' }}</td>
+                                    <td class="p-3 border-r">{{ $materiel->modele?->nom_modele ?? 'N/A' }}</td>
                                     <td class="p-3 border-r">{{ $materiel->etat }}</td>
                                     <td class="p-3">
                                         <a href="{{ route('archive.createForm', $materiel->num_serie) }}"

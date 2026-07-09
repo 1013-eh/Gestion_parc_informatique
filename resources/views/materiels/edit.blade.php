@@ -21,18 +21,18 @@
                                 <x-input-error :messages="$errors->get('num_serie')" class="mt-2" />
                             </div>
 
-                            {{-- Sous-famille dropdown --}}
+                            {{-- Modèle dropdown --}}
                             <div>
-                                <x-input-label for="id_sous_famille" :value="__('Sous-famille')" />
-                                <select id="id_sous_famille" name="id_sous_famille" class="block mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
+                                <x-input-label for="id_modele" :value="__('Modèle')" />
+                                <select id="id_modele" name="id_modele" class="block mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
                                     <option value="">Sélectionner...</option>
-                                    @foreach($sousFamilles as $sf)
-                                        <option value="{{ $sf->id_sous_famille }}" {{ old('id_sous_famille', $materiel->id_sous_famille) == $sf->id_sous_famille ? 'selected' : '' }}>
-                                            {{ $sf->nom_sous_famille }}
+                                    @foreach($modeles as $m)
+                                        <option value="{{ $m->id_modele }}" {{ old('id_modele', $materiel->id_modele) == $m->id_modele ? 'selected' : '' }}>
+                                            {{ $m->nom_modele }} ({{ $m->marque?->nom_marque ?? 'N/A' }})
                                         </option>
                                     @endforeach
                                 </select>
-                                <x-input-error :messages="$errors->get('id_sous_famille')" class="mt-2" />
+                                <x-input-error :messages="$errors->get('id_modele')" class="mt-2" />
                             </div>
 
                             {{-- Code bureau dropdown --}}
@@ -42,25 +42,11 @@
                                     <option value="">Sélectionner...</option>
                                     @foreach($centres as $c)
                                         <option value="{{ $c->code_bureau }}" {{ old('code_bureau', $materiel->code_bureau) == $c->code_bureau ? 'selected' : '' }}>
-                                            {{ $c->code_bureau }}
+                                            {{ $c->code_bureau }} - {{ $c->nom_centre }}
                                         </option>
                                     @endforeach
                                 </select>
                                 <x-input-error :messages="$errors->get('code_bureau')" class="mt-2" />
-                            </div>
-
-                            {{-- Marque --}}
-                            <div>
-                                <x-input-label for="marque" :value="__('Marque')" />
-                                <x-text-input id="marque" class="block mt-1 w-full" type="text" name="marque" :value="old('marque', $materiel->marque)" required />
-                                <x-input-error :messages="$errors->get('marque')" class="mt-2" />
-                            </div>
-
-                            {{-- Modèle --}}
-                            <div>
-                                <x-input-label for="modele" :value="__('Modèle')" />
-                                <x-text-input id="modele" class="block mt-1 w-full" type="text" name="modele" :value="old('modele', $materiel->modele)" required />
-                                <x-input-error :messages="$errors->get('modele')" class="mt-2" />
                             </div>
 
                             {{-- Date affectation --}}
@@ -77,7 +63,6 @@
                                     <option value="BON" {{ old('etat', $materiel->etat) == 'BON' ? 'selected' : '' }}>BON</option>
                                     <option value="EN_PANNE" {{ old('etat', $materiel->etat) == 'EN_PANNE' ? 'selected' : '' }}>EN PANNE</option>
                                     <option value="HORS_USAGE" {{ old('etat', $materiel->etat) == 'HORS_USAGE' ? 'selected' : '' }}>HORS USAGE</option>
-                                    <option value="ARCHIVE" {{ old('etat', $materiel->etat) == 'ARCHIVE' ? 'selected' : '' }}>ARCHIVE</option>
                                 </select>
                                 <x-input-error :messages="$errors->get('etat')" class="mt-2" />
                             </div>
