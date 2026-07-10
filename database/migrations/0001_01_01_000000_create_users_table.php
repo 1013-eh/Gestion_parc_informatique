@@ -23,6 +23,9 @@ return new class extends Migration
             $table->enum('etat',['ACTIVE','RETRAITE']);
             $table->string('email_perso',50)->unique();
             $table->timestamps();
+            Schema::table('users', function (Blueprint $table) {
+        $table->boolean('first_login')->default(true);
+    });
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
@@ -49,5 +52,8 @@ return new class extends Migration
         Schema::dropIfExists('users');
         Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
+        Schema::table('users', function (Blueprint $table) {
+        $table->dropColumn('first_login');
+        });
     }
 };

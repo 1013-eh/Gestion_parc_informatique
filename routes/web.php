@@ -6,9 +6,10 @@ use App\Http\Controllers\SousFamilleController;
 use App\Http\Controllers\MarqueController;
 use App\Http\Controllers\ModeleController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserController;
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('users.index');
 });
 
 Route::get('/dashboard', function () {
@@ -39,3 +40,4 @@ Route::get('sous_familles/{id}/marques', function($id) {
 })->name('admin.sous_familles.marques');
 
 require __DIR__ . '/auth.php';
+Route::resource('users', UserController::class);
