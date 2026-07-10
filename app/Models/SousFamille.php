@@ -19,4 +19,9 @@ class SousFamille extends Model
     {
         return $this->hasMany(Materiel::class, 'id_sous_famille');
     }
+
+    public function marques()
+    {
+        return $this->hasMany(Marque::class, 'id_sous_famille');
+    }
 }

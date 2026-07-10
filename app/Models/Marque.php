@@ -14,4 +14,14 @@ class Marque extends Model
     {
         return $this->belongsTo(SousFamille::class, 'id_sous_famille');
     }
+
+    public function modeles()
+    {
+        return $this->hasMany(Modele::class, 'id_marque');
+    }
+
+    public function materiels()
+    {
+        return $this->hasMany(Materiel::class, 'id_marque');
+    }
 }

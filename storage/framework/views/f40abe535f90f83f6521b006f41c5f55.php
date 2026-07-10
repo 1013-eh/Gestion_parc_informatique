@@ -34,6 +34,7 @@
 
             </main>
         </div>
+        <?php echo $__env->yieldPushContent('scripts'); ?>
     </body>
 </html>
 <?php /**PATH C:\Users\Asus Laptop\Documents\Vs Code\Gestion_parc_informatique\resources\views/layouts/app.blade.php ENDPATH**/ ?>

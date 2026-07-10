@@ -92,14 +92,14 @@
                             <div>
                                 <?php if (isset($component)) { $__componentOriginale3da9d84bb64e4bc2eeebaafabfb2581 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginale3da9d84bb64e4bc2eeebaafabfb2581 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.input-label','data' => ['for' => 'id_modele','value' => __('Modèle')]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.input-label','data' => ['for' => 'famille','value' => 'Famille']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('input-label'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['for' => 'id_modele','value' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(__('Modèle'))]); ?>
+<?php $component->withAttributes(['for' => 'famille','value' => 'Famille']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginale3da9d84bb64e4bc2eeebaafabfb2581)): ?>
@@ -110,34 +110,116 @@
 <?php $component = $__componentOriginale3da9d84bb64e4bc2eeebaafabfb2581; ?>
 <?php unset($__componentOriginale3da9d84bb64e4bc2eeebaafabfb2581); ?>
 <?php endif; ?>
-                                <select id="id_modele" name="id_modele" class="block mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
-                                    <option value="">Sélectionner...</option>
-                                    <?php $__currentLoopData = $modeles; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $m): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                        <option value="<?php echo e($m->id_modele); ?>" <?php echo e(old('id_modele', $materiel->id_modele) == $m->id_modele ? 'selected' : ''); ?>>
-                                            <?php echo e($m->nom_modele); ?> (<?php echo e($m->marque?->nom_marque ?? 'N/A'); ?>)
-                                        </option>
-                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                                </select>
-                                <?php if (isset($component)) { $__componentOriginalf94ed9c5393ef72725d159fe01139746 = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginalf94ed9c5393ef72725d159fe01139746 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.input-error','data' => ['messages' => $errors->get('id_modele'),'class' => 'mt-2']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('input-error'); ?>
+                                <div class="flex items-center gap-2">
+                                    <select id="famille" class="block mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                        <option value="">Sélectionner...</option>
+                                        <?php $__currentLoopData = $familles; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $f): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                            <option value="<?php echo e($f->id_famille); ?>" <?php echo e($selectedFamille->id_famille == $f->id_famille ? 'selected' : ''); ?>>
+                                                <?php echo e($f->nom_famille); ?>
+
+                                            </option>
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                    </select>
+                                    <?php if(Route::has('admin.familles.create')): ?>
+                                        <a href="<?php echo e(route('admin.familles.create')); ?>" target="_blank" class="text-blue-500 text-2xl leading-none">+</a>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+
+                            
+                            <div>
+                                <?php if (isset($component)) { $__componentOriginale3da9d84bb64e4bc2eeebaafabfb2581 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginale3da9d84bb64e4bc2eeebaafabfb2581 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.input-label','data' => ['for' => 'id_sous_famille','value' => 'Sous Famille']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('input-label'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['messages' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($errors->get('id_modele')),'class' => 'mt-2']); ?>
+<?php $component->withAttributes(['for' => 'id_sous_famille','value' => 'Sous Famille']); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
-<?php if (isset($__attributesOriginalf94ed9c5393ef72725d159fe01139746)): ?>
-<?php $attributes = $__attributesOriginalf94ed9c5393ef72725d159fe01139746; ?>
-<?php unset($__attributesOriginalf94ed9c5393ef72725d159fe01139746); ?>
+<?php if (isset($__attributesOriginale3da9d84bb64e4bc2eeebaafabfb2581)): ?>
+<?php $attributes = $__attributesOriginale3da9d84bb64e4bc2eeebaafabfb2581; ?>
+<?php unset($__attributesOriginale3da9d84bb64e4bc2eeebaafabfb2581); ?>
 <?php endif; ?>
-<?php if (isset($__componentOriginalf94ed9c5393ef72725d159fe01139746)): ?>
-<?php $component = $__componentOriginalf94ed9c5393ef72725d159fe01139746; ?>
-<?php unset($__componentOriginalf94ed9c5393ef72725d159fe01139746); ?>
+<?php if (isset($__componentOriginale3da9d84bb64e4bc2eeebaafabfb2581)): ?>
+<?php $component = $__componentOriginale3da9d84bb64e4bc2eeebaafabfb2581; ?>
+<?php unset($__componentOriginale3da9d84bb64e4bc2eeebaafabfb2581); ?>
 <?php endif; ?>
+                                <div class="flex items-center gap-2">
+                                    <select id="id_sous_famille" class="block mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500" disabled>
+                                        <option value="">Sélectionner d'abord une famille</option>
+                                    </select>
+                                    <?php if(Route::has('admin.sous_familles.create')): ?>
+                                        <a href="<?php echo e(route('admin.sous_familles.create')); ?>" target="_blank" class="text-blue-500 text-2xl leading-none">+</a>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+
+                            
+                            <div>
+                                <?php if (isset($component)) { $__componentOriginale3da9d84bb64e4bc2eeebaafabfb2581 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginale3da9d84bb64e4bc2eeebaafabfb2581 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.input-label','data' => ['for' => 'id_marque','value' => 'Marque']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('input-label'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['for' => 'id_marque','value' => 'Marque']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginale3da9d84bb64e4bc2eeebaafabfb2581)): ?>
+<?php $attributes = $__attributesOriginale3da9d84bb64e4bc2eeebaafabfb2581; ?>
+<?php unset($__attributesOriginale3da9d84bb64e4bc2eeebaafabfb2581); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginale3da9d84bb64e4bc2eeebaafabfb2581)): ?>
+<?php $component = $__componentOriginale3da9d84bb64e4bc2eeebaafabfb2581; ?>
+<?php unset($__componentOriginale3da9d84bb64e4bc2eeebaafabfb2581); ?>
+<?php endif; ?>
+                                <div class="flex items-center gap-2">
+                                    <select id="id_marque" class="block mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500" disabled>
+                                        <option value="">Sélectionner d'abord une sous famille</option>
+                                    </select>
+                                    <?php if(Route::has('admin.marques.create')): ?>
+                                        <a href="<?php echo e(route('admin.marques.create')); ?>" target="_blank" class="text-blue-500 text-2xl leading-none">+</a>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+
+                            
+                            <div>
+                                <?php if (isset($component)) { $__componentOriginale3da9d84bb64e4bc2eeebaafabfb2581 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginale3da9d84bb64e4bc2eeebaafabfb2581 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.input-label','data' => ['for' => 'id_modele','value' => 'Modèle']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('input-label'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['for' => 'id_modele','value' => 'Modèle']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginale3da9d84bb64e4bc2eeebaafabfb2581)): ?>
+<?php $attributes = $__attributesOriginale3da9d84bb64e4bc2eeebaafabfb2581; ?>
+<?php unset($__attributesOriginale3da9d84bb64e4bc2eeebaafabfb2581); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginale3da9d84bb64e4bc2eeebaafabfb2581)): ?>
+<?php $component = $__componentOriginale3da9d84bb64e4bc2eeebaafabfb2581; ?>
+<?php unset($__componentOriginale3da9d84bb64e4bc2eeebaafabfb2581); ?>
+<?php endif; ?>
+                                <div class="flex items-center gap-2">
+                                    <select id="id_modele" name="id_modele" class="block mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500" disabled>
+                                        <option value="">Sélectionner d'abord une marque</option>
+                                    </select>
+                                    <?php if(Route::has('admin.modeles.create')): ?>
+                                        <a href="<?php echo e(route('admin.modeles.create')); ?>" target="_blank" class="text-blue-500 text-2xl leading-none">+</a>
+                                    <?php endif; ?>
+                                </div>
                             </div>
 
                             
@@ -306,6 +388,97 @@
 <?php endif; ?>
                             </div>
                         </div>
+
+                        <?php $__env->startPush('scripts'); ?>
+                        <script>
+                        document.addEventListener('DOMContentLoaded', function () {
+                            const famille = document.getElementById('famille');
+                            const sousFamille = document.getElementById('id_sous_famille');
+                            const marque = document.getElementById('id_marque');
+                            const modele = document.getElementById('id_modele');
+
+                            function resetSelect(select, placeholder) {
+                                select.innerHTML = `<option value="">${placeholder}</option>`;
+                                select.disabled = true;
+                            }
+
+                            async function fetchSousFamilles(id) {
+                                const res = await fetch(`/api/sous-familles/${id}`);
+                                const data = await res.json();
+                                sousFamille.innerHTML = '<option value="">Sélectionner...</option>';
+                                data.forEach(sf => {
+                                    sousFamille.innerHTML += `<option value="${sf.id_sous_famille}">${sf.nom_sous_famille}</option>`;
+                                });
+                                sousFamille.disabled = false;
+                            }
+
+                            async function fetchMarques(id) {
+                                const res = await fetch(`/api/marques/${id}`);
+                                const data = await res.json();
+                                marque.innerHTML = '<option value="">Sélectionner...</option>';
+                                data.forEach(m => {
+                                    marque.innerHTML += `<option value="${m.id_marque}">${m.nom_marque}</option>`;
+                                });
+                                marque.disabled = false;
+                            }
+
+                            async function fetchModeles(id) {
+                                const res = await fetch(`/api/modeles/${id}`);
+                                const data = await res.json();
+                                modele.innerHTML = '<option value="">Sélectionner...</option>';
+                                data.forEach(m => {
+                                    modele.innerHTML += `<option value="${m.id_modele}">${m.nom_modele}</option>`;
+                                });
+                                modele.disabled = false;
+                            }
+
+                            famille.addEventListener('change', function () {
+                                const id = this.value;
+                                resetSelect(sousFamille, 'Sélectionner d\'abord une famille');
+                                resetSelect(marque, 'Sélectionner d\'abord une sous famille');
+                                resetSelect(modele, 'Sélectionner d\'abord une marque');
+                                if (!id) return;
+                                sousFamille.innerHTML = '<option value="">Chargement...</option>';
+                                fetchSousFamilles(id);
+                            });
+
+                            sousFamille.addEventListener('change', function () {
+                                const id = this.value;
+                                resetSelect(marque, 'Sélectionner d\'abord une sous famille');
+                                resetSelect(modele, 'Sélectionner d\'abord une marque');
+                                if (!id) return;
+                                marque.innerHTML = '<option value="">Chargement...</option>';
+                                fetchMarques(id);
+                            });
+
+                            marque.addEventListener('change', function () {
+                                const id = this.value;
+                                resetSelect(modele, 'Sélectionner d\'abord une marque');
+                                if (!id) return;
+                                modele.innerHTML = '<option value="">Chargement...</option>';
+                                fetchModeles(id);
+                            });
+
+                            // Auto restore if editing
+                            async function restoreEdit() {
+                                const sfVal = "<?php echo e($selectedSousFamille->id_sous_famille); ?>";
+                                const mqVal = "<?php echo e($selectedMarque->id_marque); ?>";
+                                const mdVal = "<?php echo e($selectedModele->id_modele); ?>";
+
+                                await fetchSousFamilles(famille.value);
+                                sousFamille.value = sfVal;
+
+                                await fetchMarques(sfVal);
+                                marque.value = mqVal;
+
+                                await fetchModeles(mqVal);
+                                modele.value = mdVal;
+                            }
+
+                            if (famille.value) restoreEdit();
+                        });
+                        </script>
+                        <?php $__env->stopPush(); ?>
 
                         
                         <div class="flex items-center gap-4">

@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Materiel;
 use \App\Models\Modele;
 use \App\Models\Centre;
+use App\Models\Famille;
+use App\Models\SousFamille;
+use App\Models\Marque;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
@@ -20,9 +23,9 @@ class MaterielController extends Controller
 
     public function create()
     {
-        $modeles = Modele::with('marque')->get();
+        $familles = Famille::all();
         $centres = Centre::all();
-        return view('materiels.create', compact('modeles', 'centres'));
+        return view('materiels.create', compact('familles', 'centres'));
     }
 
     public function store(Request $request)
@@ -61,18 +64,27 @@ class MaterielController extends Controller
                     ->lockForUpdate()
                     ->first();
 
-                $nextOrdre = ($centre->dernier_num_ordre ?? 0) + 1;
                 $region = $centre->region;
                 $regionAbbr = $region->abreviation;
+
+                $maxOrdre = Materiel::where('code_bureau', $validated['code_bureau'])
+                    ->whereNotNull('num_ordre')
+                    ->max('num_ordre');
+                $nextOrdre = max(($centre->dernier_num_ordre ?? 0), $maxOrdre ?? 0) + 1;
 
                 $validated['machine'] = sprintf('%s%d-%03d', $regionAbbr, $centre->code_bureau, $nextOrdre);
                 $validated['num_ordre'] = $nextOrdre;
 
-                // 
+                // Ensure machine is unique
+                while (Materiel::where('machine', $validated['machine'])->exists()) {
+                    $nextOrdre++;
+                    $validated['machine'] = sprintf('%s%d-%03d', $regionAbbr, $centre->code_bureau, $nextOrdre);
+                    $validated['num_ordre'] = $nextOrdre;
+                }
                 $centre->update(['dernier_num_ordre' => $nextOrdre]);
             } else {
                 $validated['machine'] = null;
-                $validated['num_ordre'] = null; // null since we made num ordre as an integer :|
+                $validated['num_ordre'] = null;
             }
 
             $materiel = Materiel::create($validated);
@@ -84,15 +96,25 @@ class MaterielController extends Controller
 
     public function edit(Materiel $materiel)
     {
-        $modeles = Modele::with('marque')->get();
+        $familles = Famille::all();
         $centres = Centre::all();
-        return view('materiels.edit', compact('materiel', 'modeles', 'centres'));
+
+        // Changed to track selected items
+        $selectedModele = $materiel->modele;
+        $selectedMarque = $selectedModele->marque;
+        $selectedSousFamille = $selectedMarque->sousFamille;
+        $selectedFamille = $selectedSousFamille->famille;
+
+        return view('materiels.edit', compact(
+            'materiel', 'familles', 'centres',
+            'selectedModele', 'selectedMarque', 'selectedSousFamille', 'selectedFamille'
+        ));
     }
 
     public function update(Request $request, Materiel $materiel)
     {
         $validated = $request->validate([
-            'num_serie'       => 'required|string|max:15|unique:materiels,num_serie,' . $materiel->num_serie . ',num_serie|regex:/^SN [A-Z0-9]+$/',
+            'num_serie'       => 'required|string|max:15|unique:materiels,num_serie,' . $materiel->num_serie . ',num_serie|regex:/^SN [A-Z0-9]{8}$/',
             'id_modele'       => 'required|integer|exists:modeles,id_modele',
             'code_bureau'     => 'required|integer|exists:centres,code_bureau',
             'date_affectation'=> 'required|date|before_or_equal:today',
@@ -110,13 +132,22 @@ class MaterielController extends Controller
                     ->lockForUpdate()
                     ->first();
 
-                $nextOrdre = ($centre->dernier_num_ordre ?? 0) + 1;
                 $region = $centre->region;
                 $regionAbbr = $region->abreviation;
+
+                $maxOrdre = Materiel::where('code_bureau', $validated['code_bureau'])
+                    ->whereNotNull('num_ordre')
+                    ->max('num_ordre');
+                $nextOrdre = max(($centre->dernier_num_ordre ?? 0), $maxOrdre ?? 0) + 1;
 
                 $validated['machine'] = sprintf('%s%d-%03d', $regionAbbr, $centre->code_bureau, $nextOrdre);
                 $validated['num_ordre'] = $nextOrdre;
 
+                while (Materiel::where('machine', $validated['machine'])->exists()) {
+                    $nextOrdre++;
+                    $validated['machine'] = sprintf('%s%d-%03d', $regionAbbr, $centre->code_bureau, $nextOrdre);
+                    $validated['num_ordre'] = $nextOrdre;
+                }
                 $centre->update(['dernier_num_ordre' => $nextOrdre]);
             } elseif (!$isPosteDeTravail && $familleChanged) {
                 $validated['machine'] = null;
@@ -130,5 +161,27 @@ class MaterielController extends Controller
 
         return redirect()->route('materiels.index')
             ->with('success', 'Matériel modifié avec succès.');
+    }
+
+    // Starting the implementation of ... something
+    public function getSousFamilles(Famille $famille)
+    {
+        return response()->json(
+            $famille->sousFamilles()->select('id_sous_famille', 'nom_sous_famille')->get()
+        );
+    }
+
+    public function getMarques(SousFamille $sousFamille)
+    {
+        return response()->json(
+            $sousFamille->marques()->select('id_marque', 'nom_marque')->get()
+        );
+    }
+
+    public function getModeles(Marque $marque)
+    {
+        return response()->json(
+            $marque->modeles()->select('id_modele', 'nom_modele')->get()
+        );
     }
 }
