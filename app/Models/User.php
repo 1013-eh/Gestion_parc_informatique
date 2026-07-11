@@ -10,11 +10,12 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
+    protected $primaryKey = 'matricule';
+    public $incrementing = false;
+    protected $keyType = 'int';
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
-    protected $primaryKey = 'matricule';
-    public $incrementing = false;
     /**
      * The attributes that are mass assignable.
      *
