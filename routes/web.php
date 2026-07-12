@@ -19,6 +19,11 @@ Route::middleware('auth')->group(function () {
     // For modifications :
     Route::get('/materiels/{materiel}/edit', [MaterielController::class, 'edit'])->name('materiels.edit');
     Route::patch('/materiels/{materiel}', [MaterielController::class, 'update'])->name('materiels.update');
+
+    // 
+    Route::get('/api/sous-familles/{famille}', [MaterielController::class, 'getSousFamilles'])->name('api.sous-familles');
+    Route::get('/api/marques/{sousFamille}', [MaterielController::class, 'getMarques'])->name('api.marques');
+    Route::get('/api/modeles/{marque}', [MaterielController::class, 'getModeles'])->name('api.modeles');
 });
 // End Of Materials Routes :
 

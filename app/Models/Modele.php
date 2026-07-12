@@ -14,4 +14,9 @@ class Modele extends Model
     {
         return $this->belongsTo(Marque::class, 'id_marque');
     }
+
+    public function materiels()
+    {
+        return $this->hasMany(Materiel::class, 'id_modele');
+    }
 }

@@ -20,18 +20,60 @@
                                 <x-input-error :messages="$errors->get('num_serie')" class="mt-2" />
                             </div>
 
-                            {{-- Modèle dropdown --}}
+                            {{-- Famille --}}
                             <div>
-                                <x-input-label for="id_modele" :value="__('Modèle')" />
-                                <select id="id_modele" name="id_modele" class="block mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
-                                    <option value="">Sélectionner...</option>
-                                    @foreach($modeles as $m)
-                                        <option value="{{ $m->id_modele }}" {{ old('id_modele') == $m->id_modele ? 'selected' : '' }}>
-                                            {{ $m->nom_modele }} ({{ $m->marque?->nom_marque ?? 'N/A' }})
-                                        </option>
-                                    @endforeach
-                                </select>
-                                <x-input-error :messages="$errors->get('id_modele')" class="mt-2" />
+                                <x-input-label for="famille" value="Famille" />
+                                <div class="flex items-center gap-2">
+                                    <select id="famille" name="id_famille" class="block mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                        <option value="">Sélectionner...</option>
+                                        @foreach($familles as $f)
+                                            <option value="{{ $f->id_famille }}" {{ old('id_famille') == $f->id_famille ? 'selected' : '' }}>{{ $f->nom_famille }}</option>
+                                        @endforeach
+                                    </select>
+                                    <!-- recheck here if adding famille or sous_famille etc doesn't work -->
+                                    @if(Route::has('admin.familles.create'))
+                                        <a href="{{ route('admin.familles.create') }}" target="_blank" class="text-blue-500 text-2xl leading-none">+</a>
+                                    @endif
+                                </div>
+                            </div>
+
+                            {{-- Sous Famille --}}
+                            <div>
+                                <x-input-label for="id_sous_famille" value="Sous Famille" />
+                                <div class="flex items-center gap-2">
+                                    <select id="id_sous_famille" name="id_sous_famille" class="block mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500" disabled>
+                                        <option value="">Sélectionner d'abord une famille</option>
+                                    </select>
+                                    @if(Route::has('admin.sous_familles.create'))
+                                        <a href="{{ route('admin.sous_familles.create') }}" target="_blank" class="text-blue-500 text-2xl leading-none">+</a>
+                                    @endif
+                                </div>
+                            </div>
+
+                            {{-- Marque --}}
+                            <div>
+                                <x-input-label for="id_marque" value="Marque" />
+                                <div class="flex items-center gap-2">
+                                    <select id="id_marque" name="id_marque" class="block mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500" disabled>
+                                        <option value="">Sélectionner d'abord une sous famille</option>
+                                    </select>
+                                    @if(Route::has('admin.marques.create'))
+                                        <a href="{{ route('admin.marques.create') }}" target="_blank" class="text-blue-500 text-2xl leading-none">+</a>
+                                    @endif
+                                </div>
+                            </div>
+
+                            {{-- Modèle --}}
+                            <div>
+                                <x-input-label for="id_modele" value="Modèle" />
+                                <div class="flex items-center gap-2">
+                                    <select id="id_modele" name="id_modele" class="block mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500" disabled>
+                                        <option value="">Sélectionner d'abord une marque</option>
+                                    </select>
+                                    @if(Route::has('admin.modeles.create'))
+                                        <a href="{{ route('admin.modeles.create') }}" target="_blank" class="text-blue-500 text-2xl leading-none">+</a>
+                                    @endif
+                                </div>
                             </div>
 
                             {{-- Code bureau dropdown --}}
@@ -66,6 +108,101 @@
                                 <x-input-error :messages="$errors->get('etat')" class="mt-2" />
                             </div>
                         </div>
+
+                        @push('scripts')
+                        <script>
+                        document.addEventListener('DOMContentLoaded', function () {
+                            const famille = document.getElementById('famille');
+                            const sousFamille = document.getElementById('id_sous_famille');
+                            const marque = document.getElementById('id_marque');
+                            const modele = document.getElementById('id_modele');
+
+                            function resetSelect(select, placeholder) {
+                                select.innerHTML = `<option value="">${placeholder}</option>`;
+                                select.disabled = true;
+                            }
+
+                            async function fetchSousFamilles(id) {
+                                const res = await fetch(`/api/sous-familles/${id}`);
+                                const data = await res.json();
+                                sousFamille.innerHTML = '<option value="">Sélectionner...</option>';
+                                data.forEach(sf => {
+                                    sousFamille.innerHTML += `<option value="${sf.id_sous_famille}">${sf.nom_sous_famille}</option>`;
+                                });
+                                sousFamille.disabled = false;
+                            }
+
+                            async function fetchMarques(id) {
+                                const res = await fetch(`/api/marques/${id}`);
+                                const data = await res.json();
+                                marque.innerHTML = '<option value="">Sélectionner...</option>';
+                                data.forEach(m => {
+                                    marque.innerHTML += `<option value="${m.id_marque}">${m.nom_marque}</option>`;
+                                });
+                                marque.disabled = false;
+                            }
+
+                            async function fetchModeles(id) {
+                                const res = await fetch(`/api/modeles/${id}`);
+                                const data = await res.json();
+                                modele.innerHTML = '<option value="">Sélectionner...</option>';
+                                data.forEach(m => {
+                                    modele.innerHTML += `<option value="${m.id_modele}">${m.nom_modele}</option>`;
+                                });
+                                modele.disabled = false;
+                            }
+
+                            famille.addEventListener('change', function () {
+                                const id = this.value;
+                                resetSelect(sousFamille, 'Sélectionner d\'abord une famille');
+                                resetSelect(marque, 'Sélectionner d\'abord une sous famille');
+                                resetSelect(modele, 'Sélectionner d\'abord une marque');
+                                if (!id) return;
+                                sousFamille.innerHTML = '<option value="">Chargement...</option>';
+                                fetchSousFamilles(id);
+                            });
+
+                            sousFamille.addEventListener('change', function () {
+                                const id = this.value;
+                                resetSelect(marque, 'Sélectionner d\'abord une sous famille');
+                                resetSelect(modele, 'Sélectionner d\'abord une marque');
+                                if (!id) return;
+                                marque.innerHTML = '<option value="">Chargement...</option>';
+                                fetchMarques(id);
+                            });
+
+                            marque.addEventListener('change', function () {
+                                const id = this.value;
+                                resetSelect(modele, 'Sélectionner d\'abord une marque');
+                                if (!id) return;
+                                modele.innerHTML = '<option value="">Chargement...</option>';
+                                fetchModeles(id);
+                            });
+
+                            async function restoreFromOld() {
+                                const fVal = "{{ old('id_famille') }}";
+                                const sfVal = "{{ old('id_sous_famille') }}";
+                                const mqVal = "{{ old('id_marque') }}";
+                                const mdVal = "{{ old('id_modele') }}";
+                                if (!fVal) return;
+
+                                famille.value = fVal;
+                                await fetchSousFamilles(fVal);
+                                if (sfVal) {
+                                    sousFamille.value = sfVal;
+                                    await fetchMarques(sfVal);
+                                }
+                                if (mqVal) {
+                                    marque.value = mqVal;
+                                    await fetchModeles(mqVal);
+                                }
+                                if (mdVal) modele.value = mdVal;
+                            }
+
+                            restoreFromOld();
+                        });
+                        </script>
+                        @endpush
 
                         {{-- Buttons --}}
                         <div class="flex items-center gap-4">
