@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Models;
-
+use App\Models\Centre;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -53,5 +53,15 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+    public function centre(){
+        return $this->hasOne(Centre::class, 'matricule', 'matricule');
+    }
+    public function isAdmin(): bool {
+        return $this->centre?->type_consultation==='ADMIN';
+    }
+    public function canViewAllCentres(): bool
+    {
+        return $this->centre?->type_consultation !== 'PAR_CENTRE';
     }
 }

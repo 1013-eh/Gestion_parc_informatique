@@ -12,20 +12,29 @@ use Illuminate\Database\QueryException;
 class ArchiveController extends Controller
 {
     // AFFICHER (tous)
-    public function index()
-    {
+    public function index(){
         try {
-            $archives = Archive::all();
+            $user = auth()->user();
+            $query = Archive::query();
+
+            if (!$user->canViewAllCentres()) {
+                $query->whereHas('materiel', function ($q) use ($user) {
+                    $q->where('code_bureau', $user->centre->code_bureau);
+                });
+            }
+
+            $archives = $query->get();
             return view('archive.index', compact('archives'));
         } catch (QueryException $e) {
             Log::error('Erreur lors de la récupération des archives: ' . $e->getMessage());
             return back()->with('error', "Impossible de charger les archives. Veuillez réessayer.");
         }
-    }
+}
 
     // formulaire d'ajout
     public function create(Request $request)
     {
+        $this->authorize('modify', Archive::class);
         $search = $request->input('search');
         $materiels = Materiel::with('modele.marque')
             ->where('etat', 'HORS_USAGE')
@@ -40,6 +49,7 @@ class ArchiveController extends Controller
 
     public function createForm($num_serie)
     {
+        $this->authorize('modify', Archive::class);
         $materiel = Materiel::with('modele.marque')
             ->where('num_serie', $num_serie)
             ->where('etat', 'HORS_USAGE')
@@ -49,6 +59,7 @@ class ArchiveController extends Controller
     // AJOUTER
     public function store(Request $request)
     {
+        $this->authorize('modify', Archive::class);
         $validated = $request->validate([
             'num_serie' => [
                 'required',
@@ -107,6 +118,7 @@ class ArchiveController extends Controller
         if (!$archive) {
             return redirect()->route('archive.index')->with('error', "Archive introuvable.");
         }
+        $this->authorize('modify', Archive::class);
 
         $materiel = Materiel::with('modele.marque')->find($archive->num_serie);
 
@@ -121,6 +133,8 @@ class ArchiveController extends Controller
         if (!$archive) {
             return redirect()->route('archive.index')->with('error', "Archive introuvable.");
         }
+
+        $this->authorize('modify', Archive::class);
 
         $validated = $request->validate([
             'num_serie' => [
@@ -176,7 +190,7 @@ class ArchiveController extends Controller
         if (!$archive) {
             return redirect()->route('archive.index')->with('error', "Archive introuvable.");
         }
-
+        $this->authorize('modify', Archive::class);
         try {
             $archive->delete();
             return redirect()->route('archive.index')->with('success', 'Archive supprimée avec succès.');
