@@ -49,7 +49,7 @@ class SousFamilleController extends Controller
      */
     public function show(string $id)
     {
-        //
+        return redirect()->route('admin.sous_familles.index');
     }
 
     /**
@@ -87,6 +87,14 @@ class SousFamilleController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $sousFamille = SousFamille::findOrFail($id);
+
+        if ($sousFamille->marques()->exists()) {
+            return back()->with('error', 'Impossible de supprimer cette sous-famille car elle contient des marques.');
+        }
+
+        $sousFamille->delete();
+
+        return redirect()->route('admin.sous_familles.index')->with('success', 'Sous-famille supprimée avec succès.');
     }
 }

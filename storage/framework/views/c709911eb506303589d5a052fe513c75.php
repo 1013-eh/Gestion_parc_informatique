@@ -33,11 +33,21 @@
                     </div>
                 <?php endif; ?>
 
-                <a href="<?php echo e(route('materiels.create')); ?>"
-                   class="inline-block mb-4 px-4 py-2 bg-blue-900 text-white rounded hover:bg-blue-800">
-                    <?php echo e(__('Ajouter un matériel')); ?>
+                <div class="mb-4 flex gap-2">
+                    <a href="<?php echo e(route('materiels.create')); ?>"
+                    class="inline-block px-4 py-2 bg-blue-900 text-white rounded hover:bg-blue-800">
+                        <?php echo e(__('Ajouter un matériel')); ?>
 
-                </a>
+                    </a>
+                    <a href="<?php echo e(route('materiels.export')); ?>"
+                    class="inline-block px-4 py-2 bg-green-600 text-white rounded hover:bg-green-500">
+                        Exporter (Excel)
+                    </a>
+                    <a href="<?php echo e(route('materiels.import.form')); ?>"
+                    class="inline-block px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-500">
+                        Importer (Excel)
+                    </a>
+                </div>
 
                 <div class="overflow-hidden rounded-lg border border-gray-200 overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200 divide-x divide-gray-200">

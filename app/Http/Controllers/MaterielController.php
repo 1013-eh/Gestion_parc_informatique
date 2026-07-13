@@ -3,13 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\Materiel;
-use \App\Models\Modele;
-use \App\Models\Centre;
+use App\Models\Modele;
+use App\Models\Centre;
 use App\Models\Famille;
 use App\Models\SousFamille;
 use App\Models\Marque;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\MaterielsExport;
+use App\Exports\MaterielTemplateExport;
+use App\Imports\MaterielsImport;
 
 class MaterielController extends Controller
 {
@@ -42,7 +46,6 @@ class MaterielController extends Controller
             $modele = Modele::with('marque.sousFamille.famille')->findOrFail($validated['id_modele']);
             $isPosteDeTravail = strtolower($modele->marque->sousFamille->famille->nom_famille) === 'poste de travail';
 
-            // 
             $year = now()->format('Y');
             $lastMarche = Materiel::where('num_marche', 'like', "I-{$year}-%")
                 ->orderBy('num_marche', 'desc')
@@ -50,16 +53,13 @@ class MaterielController extends Controller
             $lastNum = $lastMarche ? (int) substr($lastMarche->num_marche, -3) : 0;
             $validated['num_marche'] = sprintf('I-%s-%03d', $year, $lastNum + 1);
 
-            // 
             $lastCab = Materiel::orderBy('cab', 'desc')->first();
             $nextCabNum = $lastCab ? ((int) substr($lastCab->cab, 3)) + 1 : 200001;
             $validated['cab'] = 'BAM' . $nextCabNum;
 
-            // 
             if ($isPosteDeTravail) {
                 $centre = Centre::findOrFail($validated['code_bureau']);
 
-                // 
                 $centre = Centre::where('code_bureau', $validated['code_bureau'])
                     ->lockForUpdate()
                     ->first();
@@ -75,7 +75,6 @@ class MaterielController extends Controller
                 $validated['machine'] = sprintf('%s%d-%03d', $regionAbbr, $centre->code_bureau, $nextOrdre);
                 $validated['num_ordre'] = $nextOrdre;
 
-                // Ensure machine is unique
                 while (Materiel::where('machine', $validated['machine'])->exists()) {
                     $nextOrdre++;
                     $validated['machine'] = sprintf('%s%d-%03d', $regionAbbr, $centre->code_bureau, $nextOrdre);
@@ -99,7 +98,6 @@ class MaterielController extends Controller
         $familles = Famille::all();
         $centres = Centre::all();
 
-        // Changed to track selected items
         $selectedModele = $materiel->modele;
         $selectedMarque = $selectedModele->marque;
         $selectedSousFamille = $selectedMarque->sousFamille;
@@ -163,7 +161,6 @@ class MaterielController extends Controller
             ->with('success', 'Matériel modifié avec succès.');
     }
 
-    // Starting the implementation of ... something
     public function getSousFamilles(Famille $famille)
     {
         return response()->json(
@@ -183,5 +180,37 @@ class MaterielController extends Controller
         return response()->json(
             $marque->modeles()->select('id_modele', 'nom_modele')->get()
         );
+    }
+
+    public function export()
+    {
+        return Excel::download(new MaterielsExport, 'materiels.xlsx');
+    }
+
+    public function downloadTemplate()
+    {
+        return Excel::download(new MaterielTemplateExport, 'template_materiels.xlsx');
+    }
+
+    public function showImportForm()
+    {
+        return view('materiels.import');
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:xlsx,xls,csv',
+        ]);
+
+        try {
+            Excel::import(new MaterielsImport, $request->file('file'));
+            return redirect()->route('materiels.index')
+                ->with('success', 'Importation réussie.');
+        } catch (\Illuminate\Database\QueryException $e) {
+            return back()->with('error', 'Erreur base de données : doublon ou contrainte violée. Vérifiez que les numéros de série sont uniques.');
+        } catch (\Throwable $e) {
+            return back()->with('error', $e->getMessage());
+        }
     }
 }

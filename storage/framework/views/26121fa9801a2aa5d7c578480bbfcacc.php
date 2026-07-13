@@ -116,6 +116,7 @@
                                             <option value="<?php echo e($f->id_famille); ?>" <?php echo e(old('id_famille') == $f->id_famille ? 'selected' : ''); ?>><?php echo e($f->nom_famille); ?></option>
                                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                     </select>
+                                    <!-- recheck here if adding famille or sous_famille etc doesn't work -->
                                     <?php if(Route::has('admin.familles.create')): ?>
                                         <a href="<?php echo e(route('admin.familles.create')); ?>" target="_blank" class="text-blue-500 text-2xl leading-none">+</a>
                                     <?php endif; ?>
