@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -19,11 +19,11 @@ class ChangePasswordController extends Controller
             'password' => 'required|min:8|confirmed',
         ]);
 
-        $user = Auth::user();
-
-        $user->password = Hash::make($request->password);
-        $user->first_login = false;
-        $user->save();
+        $user = User::where('matricule', Auth::user()->matricule)->first();
+        $user->update([
+            'password' => Hash::make($request->password),
+            'first_login' => false,
+        ]);
 
         return redirect()->route('dashboard')
             ->with('success', 'Mot de passe modifié avec succès.');

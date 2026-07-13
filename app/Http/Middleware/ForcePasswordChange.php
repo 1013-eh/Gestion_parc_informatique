@@ -14,10 +14,10 @@ class ForcePasswordChange
         if (
             Auth::check() &&
             Auth::user()->first_login &&
-            !$request->routeIs('password.change') &&
-            !$request->routeIs('password.update')
+            !$request->routeIs('change.password') &&
+            !$request->routeIs('change.password.update')
         ) {
-            return redirect()->route('password.change');
+            return redirect()->route('change.password');
         }
 
         return $next($request);

@@ -5,11 +5,12 @@ use App\Http\Controllers\FamilleController;
 use App\Http\Controllers\SousFamilleController;
 use App\Http\Controllers\MarqueController;
 use App\Http\Controllers\ModeleController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ChangePasswordController;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return redirect()->route('users.index');
+    return redirect()->route('login');
 });
 
 Route::get('/dashboard', function () {
@@ -17,9 +18,18 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Changer mot de passe première connexion
+    Route::get('/change-password', [ChangePasswordController::class, 'show'])->name('change.password');
+    Route::post('/change-password', [ChangePasswordController::class, 'update'])->name('change.password.update');
+
+    // Users
+    Route::resource('users', UserController::class);
+
 });
 
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
@@ -40,4 +50,3 @@ Route::get('sous_familles/{id}/marques', function($id) {
 })->name('admin.sous_familles.marques');
 
 require __DIR__ . '/auth.php';
-Route::resource('users', UserController::class);

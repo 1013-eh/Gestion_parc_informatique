@@ -6,6 +6,7 @@ namespace App\Models;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\Models\Centre;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
@@ -30,6 +31,8 @@ class User extends Authenticatable
         'password',
         'email_perso',
         'etat',
+        'first_login',
+        'failed_attempts',
     ];
 
     /**
@@ -52,6 +55,17 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'first_login' => 'boolean',
         ];
+    }
+
+    public function getRouteKeyName(): string
+    {
+        return 'matricule';
+    }
+
+    public function centre()
+    {
+        return $this->hasOne(Centre::class, 'matricule', 'matricule');
     }
 }
