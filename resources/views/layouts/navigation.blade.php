@@ -20,8 +20,11 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Famille & Sous-Fammilles') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                    <x-nav-link :href="route('regions.index')" :active="request()->routeIs('regions.index','regions.*')">
                         {{ __('Regions') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('centres.index')" :active="request()->routeIs('centres.index','centres.*')">
+                        {{ __('Centres') }}
                     </x-nav-link>
                     <x-nav-link :href="route('materiels.index')" :active="request()->routeIs('dashboard')">
                         {{ __('Liste materielles informatique') }}
@@ -84,6 +87,10 @@
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
+            </x-responsive-nav-link>
+
+            <x-responsive-nav-link :href="route('regions.index')" :active="request()->routeIs('regions.index','regions.*')">
+                {{ __('Regions') }}
             </x-responsive-nav-link>
         </div>
 

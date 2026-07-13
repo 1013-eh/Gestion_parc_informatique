@@ -30,10 +30,11 @@
 
             <!-- Page Content -->
             <main>
-                <?php echo e($slot); ?>
+                <?php echo $__env->yieldContent('content'); ?>
+                <?php echo e($slot ?? ''); ?>
 
             </main>
         </div>
     </body>
 </html>
-<?php /**PATH C:\Users\Asus Laptop\Documents\Vs Code\Gestion_parc_informatique\resources\views/layouts/app.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\xampp\htdocs\Gestion_parc_informatique\resources\views/layouts/app.blade.php ENDPATH**/ ?>

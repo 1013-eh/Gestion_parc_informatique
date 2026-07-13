@@ -10,7 +10,7 @@
 <?php $component->withAttributes([]); ?>
      <?php $__env->slot('header', null, []); ?> 
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            <?php echo e(__('Modifier un matériel')); ?>
+            <?php echo e(__('Ajouter un matériel')); ?>
 
         </h2>
      <?php $__env->endSlot(); ?>
@@ -19,8 +19,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    <form method="POST" action="<?php echo e(route('materiels.update', $materiel->num_serie)); ?>" class="space-y-6">
-                        <?php echo method_field('PATCH'); ?>
+                    <form method="POST" action="<?php echo e(route('materiels.store')); ?>" class="space-y-6">
                         <?php echo csrf_field(); ?>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -48,14 +47,14 @@
 <?php endif; ?>
                                 <?php if (isset($component)) { $__componentOriginal18c21970322f9e5c938bc954620c12bb = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal18c21970322f9e5c938bc954620c12bb = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.text-input','data' => ['id' => 'num_serie','class' => 'block mt-1 w-full','type' => 'text','name' => 'num_serie','value' => old('num_serie', $materiel->num_serie),'required' => true]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.text-input','data' => ['id' => 'num_serie','class' => 'block mt-1 w-full','type' => 'text','name' => 'num_serie','value' => old('num_serie'),'required' => true]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('text-input'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['id' => 'num_serie','class' => 'block mt-1 w-full','type' => 'text','name' => 'num_serie','value' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(old('num_serie', $materiel->num_serie)),'required' => true]); ?>
+<?php $component->withAttributes(['id' => 'num_serie','class' => 'block mt-1 w-full','type' => 'text','name' => 'num_serie','value' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(old('num_serie')),'required' => true]); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal18c21970322f9e5c938bc954620c12bb)): ?>
@@ -113,7 +112,7 @@
                                 <select id="id_modele" name="id_modele" class="block mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
                                     <option value="">Sélectionner...</option>
                                     <?php $__currentLoopData = $modeles; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $m): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                        <option value="<?php echo e($m->id_modele); ?>" <?php echo e(old('id_modele', $materiel->id_modele) == $m->id_modele ? 'selected' : ''); ?>>
+                                        <option value="<?php echo e($m->id_modele); ?>" <?php echo e(old('id_modele') == $m->id_modele ? 'selected' : ''); ?>>
                                             <?php echo e($m->nom_modele); ?> (<?php echo e($m->marque?->nom_marque ?? 'N/A'); ?>)
                                         </option>
                                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
@@ -165,7 +164,7 @@
                                 <select id="code_bureau" name="code_bureau" class="block mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
                                     <option value="">Sélectionner...</option>
                                     <?php $__currentLoopData = $centres; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $c): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                        <option value="<?php echo e($c->code_bureau); ?>" <?php echo e(old('code_bureau', $materiel->code_bureau) == $c->code_bureau ? 'selected' : ''); ?>>
+                                        <option value="<?php echo e($c->code_bureau); ?>" <?php echo e(old('code_bureau') == $c->code_bureau ? 'selected' : ''); ?>>
                                             <?php echo e($c->code_bureau); ?> - <?php echo e($c->nom_centre); ?>
 
                                         </option>
@@ -217,14 +216,14 @@
 <?php endif; ?>
                                 <?php if (isset($component)) { $__componentOriginal18c21970322f9e5c938bc954620c12bb = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal18c21970322f9e5c938bc954620c12bb = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.text-input','data' => ['id' => 'date_affectation','class' => 'block mt-1 w-full','type' => 'date','name' => 'date_affectation','value' => old('date_affectation', $materiel->date_affectation),'required' => true]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.text-input','data' => ['id' => 'date_affectation','class' => 'block mt-1 w-full','type' => 'date','name' => 'date_affectation','value' => old('date_affectation', date('Y-m-d')),'required' => true]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('text-input'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['id' => 'date_affectation','class' => 'block mt-1 w-full','type' => 'date','name' => 'date_affectation','value' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(old('date_affectation', $materiel->date_affectation)),'required' => true]); ?>
+<?php $component->withAttributes(['id' => 'date_affectation','class' => 'block mt-1 w-full','type' => 'date','name' => 'date_affectation','value' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(old('date_affectation', date('Y-m-d'))),'required' => true]); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginal18c21970322f9e5c938bc954620c12bb)): ?>
@@ -280,9 +279,9 @@
 <?php unset($__componentOriginale3da9d84bb64e4bc2eeebaafabfb2581); ?>
 <?php endif; ?>
                                 <select id="etat" name="etat" class="block mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
-                                    <option value="BON" <?php echo e(old('etat', $materiel->etat) == 'BON' ? 'selected' : ''); ?>>BON</option>
-                                    <option value="EN_PANNE" <?php echo e(old('etat', $materiel->etat) == 'EN_PANNE' ? 'selected' : ''); ?>>EN PANNE</option>
-                                    <option value="HORS_USAGE" <?php echo e(old('etat', $materiel->etat) == 'HORS_USAGE' ? 'selected' : ''); ?>>HORS USAGE</option>
+                                    <option value="BON" <?php echo e(old('etat') == 'BON' ? 'selected' : ''); ?>>BON</option>
+                                    <option value="EN_PANNE" <?php echo e(old('etat') == 'EN_PANNE' ? 'selected' : ''); ?>>EN PANNE</option>
+                                    <option value="HORS_USAGE" <?php echo e(old('etat') == 'HORS_USAGE' ? 'selected' : ''); ?>>HORS USAGE</option>
                                 </select>
                                 <?php if (isset($component)) { $__componentOriginalf94ed9c5393ef72725d159fe01139746 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginalf94ed9c5393ef72725d159fe01139746 = $attributes; } ?>
@@ -318,7 +317,7 @@
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes([]); ?><?php echo e(__('Modifier')); ?> <?php echo $__env->renderComponent(); ?>
+<?php $component->withAttributes([]); ?><?php echo e(__('Ajouter')); ?> <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
 <?php if (isset($__attributesOriginald411d1792bd6cc877d687758b753742c)): ?>
 <?php $attributes = $__attributesOriginald411d1792bd6cc877d687758b753742c; ?>
@@ -364,4 +363,4 @@
 <?php if (isset($__componentOriginal9ac128a9029c0e4701924bd2d73d7f54)): ?>
 <?php $component = $__componentOriginal9ac128a9029c0e4701924bd2d73d7f54; ?>
 <?php unset($__componentOriginal9ac128a9029c0e4701924bd2d73d7f54); ?>
-<?php endif; ?><?php /**PATH C:\Users\Asus Laptop\Documents\Vs Code\Gestion_parc_informatique\resources\views/materiels/edit.blade.php ENDPATH**/ ?>
+<?php endif; ?><?php /**PATH C:\xampp\htdocs\Gestion_parc_informatique\resources\views/materiels/create.blade.php ENDPATH**/ ?>
