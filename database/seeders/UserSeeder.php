@@ -32,10 +32,10 @@ class UserSeeder extends Seeder
 
         User::create([
             'matricule' => 3,
-            'nom' => 'ali',
-            'prenom' => 'Ra',
-            'email' => 'ali.rab@parc.com',
-            'email_perso' => 'ali.ra.perso@parc.com',
+            'nom' => 'Admin',
+            'prenom' => 'Rabat',
+            'email' => 'admin.rabat@parc.com',
+            'email_perso' => 'admin.rabat.perso@parc.com',
             'password' => Hash::make('password'),
             'etat' => 'ACTIVE',
         ]);
