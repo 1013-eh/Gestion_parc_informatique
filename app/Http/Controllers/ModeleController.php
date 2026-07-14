@@ -1,9 +1,12 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\Marque;
 use App\Models\Modele;
 use App\Models\Famille;
+use App\Models\SousFamille;
+use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 
 class ModeleController extends Controller
@@ -58,9 +61,26 @@ class ModeleController extends Controller
      */
     public function edit(string $id)
     {
-        $modele = Modele::findOrFail($id);
-        $marques = Marque::all();
-        return view('admin.modeles.edit', compact('modele', 'marques'));
+        $modele = Modele::with('marque.sousFamille')->findOrFail($id);
+
+        $familles = Famille::all();
+
+        $sousFamilles = SousFamille::where(
+            'id_famille',
+            $modele->marque->sousFamille->id_famille
+        )->get();
+
+        $marques = Marque::where(
+            'id_sous_famille',
+            $modele->marque->id_sous_famille
+        )->get();
+
+        return view('admin.modeles.edit', compact(
+            'modele',
+            'familles',
+            'sousFamilles',
+            'marques'
+        ));
     }
 
     /**
@@ -68,19 +88,26 @@ class ModeleController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $modele = Modele::findOrFail($id);
+
         $request->validate([
-            'nom_modele' => 'required|unique:modeles|max:50',
+            'nom_modele' => [
+                'required',
+                'max:50',
+                Rule::unique('modeles', 'nom_modele')
+                    ->ignore($modele->id_modele, 'id_modele'),
+            ],
             'id_marque' => 'required|exists:marques,id_marque',
         ]);
-
-        $modele = Modele::findOrFail($id);
 
         $modele->update([
             'nom_modele' => $request->nom_modele,
             'id_marque' => $request->id_marque,
         ]);
 
-        return redirect()->route('admin.familles.index')->with('success', 'Modele modifiée avec succès.');
+        return redirect()
+            ->route('admin.familles.index')
+            ->with('success', 'Modèle modifié avec succès.');
     }
 
     /**

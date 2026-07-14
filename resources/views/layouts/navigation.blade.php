@@ -21,7 +21,10 @@
                         {{ __('Categories') }}
                     </x-nav-link>
                     <x-nav-link :href="route('regions.index')" :active="request()->routeIs('regions.*')">
-                        {{ __('Regions & Centres') }}
+                        {{ __('Regions') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('centres.index')" :active="request()->routeIs('centres.*')">
+                        {{ __('Centres') }}
                     </x-nav-link>
                     <x-nav-link :href="route('materiels.index')" :active="request()->routeIs('materiels.*')">
                         {{ __('Liste materielles informatique') }}
@@ -29,9 +32,11 @@
                     <x-nav-link :href="route('archive.index')" :active="request()->routeIs('archive.*')">
                         {{ __('Materielles Archives') }}
                     </x-nav-link>
+                    @if(auth()->user()->centre->type_consultation === 'ADMIN')
                     <x-nav-link :href="route('users.index')" :active="request()->routeIs('users.index')">
                         {{ __('Utilisateurs') }}
                     </x-nav-link>
+                    @endif
                 </div>
 
             </div>

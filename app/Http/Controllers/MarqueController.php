@@ -1,10 +1,12 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\SousFamille;
 use App\Models\Famille;
 use App\Models\Marque;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class MarqueController extends Controller
 {
@@ -58,9 +60,20 @@ class MarqueController extends Controller
      */
     public function edit(string $id)
     {
-        $marque = Marque::findOrFail($id);
-        $sous_familles = SousFamille::all();
-        return view('admin.marques.edit', compact('marque', 'sous_familles'));
+        $marque = Marque::with('sousFamille')->findOrFail($id);
+
+        $familles = Famille::all();
+
+        $sousFamilles = SousFamille::where(
+            'id_famille',
+            $marque->sousFamille->id_famille
+        )->get();
+
+        return view('admin.marques.edit', compact(
+            'marque',
+            'familles',
+            'sousFamilles'
+        ));
     }
 
     /**
@@ -68,19 +81,26 @@ class MarqueController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $marque = Marque::findOrFail($id);
+
         $request->validate([
-            'nom_marque' => 'required|unique:marques|max:50',
+            'nom_marque' => [
+                'required',
+                'max:50',
+                Rule::unique('marques', 'nom_marque')
+                    ->ignore($marque->id_marque, 'id_marque'),
+            ],
             'id_sous_famille' => 'required|exists:sous_familles,id_sous_famille',
         ]);
-
-        $marque = Marque::findOrFail($id);
 
         $marque->update([
             'nom_marque' => $request->nom_marque,
             'id_sous_famille' => $request->id_sous_famille,
         ]);
 
-        return redirect()->route('admin.familles.index')->with('success', 'Marque modifiée avec succès.');
+        return redirect()
+            ->route('admin.familles.index')
+            ->with('success', 'Marque modifiée avec succès.');
     }
 
     /**

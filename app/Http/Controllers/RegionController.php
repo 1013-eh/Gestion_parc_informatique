@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Region;
+use App\Models\Centre;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -14,7 +15,9 @@ class RegionController extends Controller
     public function index()
     {
         $regions = Region::withCount('centres')->get();
-        return view('regions.index', compact('regions'));
+        $monCentre = Centre::where('matricule', auth()->user()->matricule)->first();
+        $isAdmin = $monCentre && $monCentre->type_consultation === 'ADMIN';
+        return view('regions.index', compact('regions', 'isAdmin'));
     }
 
     /**
@@ -104,7 +107,7 @@ class RegionController extends Controller
         ]);
 
         return redirect()->route('regions.index')
-            ->with('success', '✅ Région "'.$region->libelle_region.'" mise à jour avec succès !');
+            ->with('success', 'Région "'.$region->libelle_region.'" mise à jour avec succès !');
     }
 
     /**
