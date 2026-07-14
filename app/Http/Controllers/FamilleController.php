@@ -46,8 +46,7 @@ class FamilleController extends Controller
      */
     public function show(string $id)
     {
-        $famille = Famille::findOrFail($id);
-        return view('admin.familles.show', compact('famille'));
+        return redirect()->route('admin.familles.index');
     }
 
     /**
@@ -82,6 +81,14 @@ class FamilleController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $famille = Famille::findOrFail($id);
+
+        if ($famille->sousFamilles()->exists()) {
+            return back()->with('error', 'Impossible de supprimer cette famille car elle contient des sous-familles.');
+        }
+
+        $famille->delete();
+
+        return redirect()->route('admin.familles.index')->with('success', 'Famille supprimée avec succès.');
     }
 }

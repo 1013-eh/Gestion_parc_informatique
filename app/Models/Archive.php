@@ -14,4 +14,8 @@ class Archive extends Model
         'description',
         'date_archivage',
     ];
+    public function materiel()
+    {
+    return $this->belongsTo(Materiel::class, 'num_serie', 'num_serie');
+    }
 }

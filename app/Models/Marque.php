@@ -30,4 +30,14 @@ class Marque extends Model
             'id_marque'
         );
     }
+
+    public function modeles()
+    {
+        return $this->hasMany(Modele::class, 'id_marque');
+    }
+
+    public function materiels()
+    {
+        return $this->hasMany(Materiel::class, 'id_marque');
+    }
 }

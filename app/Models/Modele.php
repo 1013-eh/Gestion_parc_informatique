@@ -30,4 +30,9 @@ class Modele extends Model
             'id_modele'
         );
     }
+
+    public function materiels()
+    {
+        return $this->hasMany(Materiel::class, 'id_modele');
+    }
 }

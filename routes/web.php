@@ -18,9 +18,28 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::middleware('auth')->group(function () {
+    // Matériels (routes personnalisées — export/import inclus, ne pas dupliquer avec Route::resource)
+    Route::get('/materiels', [MaterielController::class, 'index'])->name('materiels.index');
+    Route::get('/materiels/create', [MaterielController::class, 'create'])->name('materiels.create');
+    Route::post('/materiels', [MaterielController::class, 'store'])->name('materiels.store');
+
+    Route::get('/materiels/export', [MaterielController::class, 'export'])->name('materiels.export');
+    Route::get('/materiels/import/template', [MaterielController::class, 'downloadTemplate'])->name('materiels.import.template');
+    Route::get('/materiels/import', [MaterielController::class, 'showImportForm'])->name('materiels.import.form');
+    Route::post('/materiels/import', [MaterielController::class, 'import'])->name('materiels.import.store');
+
+    Route::get('/materiels/{materiel}/edit', [MaterielController::class, 'edit'])->name('materiels.edit');
+    Route::patch('/materiels/{materiel}', [MaterielController::class, 'update'])->name('materiels.update');
+
+    Route::get('/api/sous-familles/{famille}', [MaterielController::class, 'getSousFamilles'])->name('api.sous-familles');
+    Route::get('/api/marques/{sousFamille}', [MaterielController::class, 'getMarques'])->name('api.marques');
+    Route::get('/api/modeles/{marque}', [MaterielController::class, 'getModeles'])->name('api.modeles');
+});
+
+Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
 Route::middleware('auth')->group(function () {
 
@@ -35,9 +54,6 @@ Route::middleware('auth')->group(function () {
 
     // Utilisateurs
     Route::resource('users', UserController::class);
-
-    // Matériels
-    Route::resource('materiels', MaterielController::class);
 
     // Régions
     Route::resource('regions', RegionController::class);

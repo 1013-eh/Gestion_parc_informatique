@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Models;
-
+use App\Models\Centre;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -59,13 +59,21 @@ class User extends Authenticatable
         ];
     }
 
+
     public function getRouteKeyName(): string
     {
         return 'matricule';
     }
 
-    public function centre()
-    {
+    
+    public function centre(){
         return $this->hasOne(Centre::class, 'matricule', 'matricule');
+    }
+    public function isAdmin(): bool {
+        return $this->centre?->type_consultation==='ADMIN';
+    }
+    public function canViewAllCentres(): bool
+    {
+        return $this->centre !== null && $this->centre->type_consultation !== 'PAR_CENTRE';
     }
 }
