@@ -17,16 +17,16 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('admin.familles.index')" :active="request()->routeIs('admin.familles.index')">
+                    <x-nav-link :href="route('admin.familles.index')" :active="request()->routeIs('admin.*')">
                         {{ __('Categories') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                    <x-nav-link :href="route('regions.index')" :active="request()->routeIs('regions.*')">
                         {{ __('Regions & Centres') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                    <x-nav-link :href="route('materiels.index')" :active="request()->routeIs('materiels.*')">
                         {{ __('Liste materielles informatique') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                    <x-nav-link :href="route('archive.index')" :active="request()->routeIs('archive.*')">
                         {{ __('Materielles Archives') }}
                     </x-nav-link>
                     <x-nav-link :href="route('users.index')" :active="request()->routeIs('users.index')">
