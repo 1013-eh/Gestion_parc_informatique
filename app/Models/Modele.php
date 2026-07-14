@@ -24,15 +24,6 @@ class Modele extends Model
 
     public function materiels()
     {
-        return $this->hasMany(
-            Materiel::class,
-            'id_modele',
-            'id_modele'
-        );
-    }
-
-    public function materiels()
-    {
         return $this->hasMany(Materiel::class, 'id_modele');
     }
 }
