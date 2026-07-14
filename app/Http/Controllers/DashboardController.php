@@ -13,7 +13,6 @@ use App\Models\Archive;
 
 class DashboardController extends Controller
 {
-
     public function index()
     {
         $user = auth()->user();
@@ -21,11 +20,18 @@ class DashboardController extends Controller
             abort(403, "Votre compte n'est rattaché à aucun centre. Contactez un administrateur.");
         }
 
+        $categories = [
+            'famillesCount'      => Famille::count(),
+            'sousFamillesCount'  => SousFamille::count(),
+            'marquesCount'       => Marque::count(),
+            'modelesCount'       => Modele::count(),
+        ];
+
         if ($user->canViewAllCentres()) {
-            return view('dashboard', $this->globalStats());
+            return view('dashboard', array_merge($categories, $this->globalStats()));
         }
 
-        return view('dashboard', $this->centreStats($user->centre->code_bureau));
+        return view('dashboard', array_merge($categories, $this->centreStats($user->centre->code_bureau)));
     }
 
     private function globalStats()
@@ -36,22 +42,8 @@ class DashboardController extends Controller
             ->with('centre')
             ->get();
 
-        $archivesParCentre = Archive::whereHas('materiel')
-            ->with('materiel.centre')
-            ->get()
-            ->groupBy(fn ($a) => $a->materiel->code_bureau)
-            ->map(fn ($group) => [
-                'centre' => $group->first()->materiel->centre,
-                'total' => $group->count(),
-            ]);
-
         return [
             'isGlobalView'       => true,
-            'familles'           => Famille::withCount('sousFamilles')->get(),
-            'famillesCount'      => Famille::count(),
-            'sousFamillesCount'  => SousFamille::count(),
-            'marquesCount'       => Marque::count(),
-            'modelesCount'       => Modele::count(),
             'regions'            => Region::all(),
             'regionsCount'       => Region::count(),
             'centres'            => Centre::all(),
@@ -59,29 +51,14 @@ class DashboardController extends Controller
             'materielsTotal'     => Materiel::where('etat', '!=', 'ARCHIVE')->count(),
             'materielsParCentre' => $materielsParCentre,
             'archivesTotal'      => Archive::count(),
-            'archivesParCentre'  => $archivesParCentre,
         ];
     }
 
     private function centreStats(int $codeBureau)
     {
-        $materiels = Materiel::with('modele.marque.sousFamille.famille')
-            ->where('code_bureau', $codeBureau)
-            ->where('etat', '!=', 'ARCHIVE')
-            ->get();
-
-        $familles = $materiels->pluck('modele.marque.sousFamille.famille')->filter()->unique('id_famille');
-        $sousFamilles = $materiels->pluck('modele.marque.sousFamille')->filter()->unique('id_sous_famille');
-        $marques = $materiels->pluck('modele.marque')->filter()->unique('id_marque');
-        $modeles = $materiels->pluck('modele')->filter()->unique('id_modele');
-
         return [
             'isGlobalView'      => false,
-            'familles'          => $familles,
-            'sousFamilles'      => $sousFamilles,
-            'marques'           => $marques,
-            'modeles'           => $modeles,
-            'materielsTotal'    => $materiels->count(),
+            'materielsTotal'    => Materiel::where('code_bureau', $codeBureau)->where('etat', '!=', 'ARCHIVE')->count(),
             'archivesTotal'     => Archive::whereHas('materiel', fn ($q) => $q->where('code_bureau', $codeBureau))->count(),
         ];
     }
