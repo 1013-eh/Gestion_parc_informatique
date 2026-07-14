@@ -8,20 +8,24 @@ class Marque extends Model
 {
     protected $primaryKey = 'id_marque';
 
-    protected $fillable = ['nom_marque', 'id_sous_famille'];
+    protected $fillable = [
+        'nom_marque',
+        'id_sous_famille'
+    ];
 
     public function sousFamille()
     {
-        return $this->belongsTo(SousFamille::class, 'id_sous_famille');
+        return $this->belongsTo(
+            SousFamille::class,
+            'id_sous_famille',
+            'id_sous_famille'
+        );
     }
+
 
     public function modeles()
     {
         return $this->hasMany(Modele::class, 'id_marque');
     }
 
-    public function materiels()
-    {
-        return $this->hasMany(Materiel::class, 'id_marque');
-    }
 }

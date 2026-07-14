@@ -17,18 +17,26 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Famille & Sous-Fammilles') }}
+                    <x-nav-link :href="route('admin.familles.index')" :active="request()->routeIs('admin.*')">
+                        {{ __('Categories') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                    <x-nav-link :href="route('regions.index')" :active="request()->routeIs('regions.*')">
                         {{ __('Regions') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('materiels.index')" :active="request()->routeIs('dashboard')">
+                    <x-nav-link :href="route('centres.index')" :active="request()->routeIs('centres.*')">
+                        {{ __('Centres') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('materiels.index')" :active="request()->routeIs('materiels.*')">
                         {{ __('Liste materielles informatique') }}
                     </x-nav-link>
                     <x-nav-link :href="route('archive.index')" :active="request()->routeIs('archive.*')">
                         {{ __('Materielles Archives') }}
                     </x-nav-link>
+                    @if(auth()->user()->centre->type_consultation === 'ADMIN')
+                    <x-nav-link :href="route('users.index')" :active="request()->routeIs('users.index')">
+                        {{ __('Utilisateurs') }}
+                    </x-nav-link>
+                    @endif
                 </div>
 
             </div>
@@ -38,7 +46,7 @@
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
-                            <div>@auth {{ Auth::user()->nom }} {{ Auth::user()->prenom }} @endauth</div>
+                            <div>{{ Auth::user()->nom }} {{ Auth::user()->prenom }}</div>
 
                             <div class="ms-1">
                                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -90,10 +98,9 @@
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200">
             <div class="px-4">
-                @auth
-                <div class="font-medium text-base text-gray-800">{{ Auth::user()->nom }} {{ Auth::user()->prenom }}</div>
+                <div class="font-medium text-base text-gray-800">{{ Auth::user()->nom }}</div>
+                <div class="font-medium text-base text-gray-800">{{ Auth::user()->prenom }}</div>
                 <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
-                @endauth
             </div>
 
             <div class="mt-3 space-y-1">

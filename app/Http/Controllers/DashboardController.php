@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+
 use App\Models\Famille;
 use App\Models\SousFamille;
 use App\Models\Marque;
@@ -10,6 +11,7 @@ use App\Models\Region;
 use App\Models\Centre;
 use App\Models\Materiel;
 use App\Models\Archive;
+
 
 class DashboardController extends Controller
 {

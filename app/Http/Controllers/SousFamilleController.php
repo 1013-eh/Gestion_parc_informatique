@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Famille;
 use App\Models\SousFamille;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class SousFamilleController extends Controller
 {
@@ -49,7 +50,10 @@ class SousFamilleController extends Controller
      */
     public function show(string $id)
     {
-        return redirect()->route('admin.sous_familles.index');
+
+        $sousFamille = SousFamille::findOrFail($id);
+        return view('admin.sous_familles.show', compact('sousfamille'));
+
     }
 
     /**
@@ -67,19 +71,26 @@ class SousFamilleController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $sousFamille = SousFamille::findOrFail($id);
+
         $request->validate([
-            'nom_sous_famille' => 'required|unique:sous_familles|max:60',
+            'nom_sous_famille' => [
+                'required',
+                'max:60',
+                Rule::unique('sous_familles', 'nom_sous_famille')
+                    ->ignore($sousFamille->id_sous_famille, 'id_sous_famille'),
+            ],
             'id_famille' => 'required|exists:familles,id_famille',
         ]);
 
-        $sousfamille = SousFamille::findOrFail($id);
-
-        $sousfamille->update([
+        $sousFamille->update([
             'nom_sous_famille' => $request->nom_sous_famille,
             'id_famille' => $request->id_famille,
         ]);
 
-        return redirect()->route('admin.sous_familles.index')->with('success', 'Sous famille modifiée avec succès.');
+        return redirect()
+            ->route('admin.familles.index')
+            ->with('success', 'Sous famille modifiée avec succès.');
     }
 
     /**
