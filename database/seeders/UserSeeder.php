@@ -29,5 +29,15 @@ class UserSeeder extends Seeder
             'password' => Hash::make('password'),
             'etat' => 'ACTIVE',
         ]);
+
+        User::create([
+            'matricule' => 3,
+            'nom' => 'ali',
+            'prenom' => 'Ra',
+            'email' => 'ali.rab@parc.com',
+            'email_perso' => 'ali.ra.perso@parc.com',
+            'password' => Hash::make('password'),
+            'etat' => 'ACTIVE',
+        ]);
     }
 }

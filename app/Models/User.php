@@ -62,6 +62,6 @@ class User extends Authenticatable
     }
     public function canViewAllCentres(): bool
     {
-        return $this->centre?->type_consultation !== 'PAR_CENTRE';
+        return $this->centre !== null && $this->centre->type_consultation !== 'PAR_CENTRE';
     }
 }
