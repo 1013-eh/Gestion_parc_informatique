@@ -3,19 +3,20 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Centre;
+use App\Notifications\CustomResetPasswordNotification;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use App\Models\Centre;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
+    use HasFactory, Notifiable;
+
     protected $primaryKey = 'matricule';
     public $incrementing = false;
     protected $keyType = 'int';
-    /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -27,9 +28,9 @@ class User extends Authenticatable
         'nom',
         'prenom',
         'email',
+        'email_perso',
         'tel',
         'password',
-        'email_perso',
         'etat',
         'first_login',
         'failed_attempts',
@@ -59,13 +60,44 @@ class User extends Authenticatable
         ];
     }
 
+    /**
+     * Utiliser le matricule comme clé de route.
+     */
     public function getRouteKeyName(): string
     {
         return 'matricule';
     }
 
+    /**
+     * Relation avec le centre dont l'utilisateur est responsable.
+     */
     public function centre()
     {
         return $this->hasOne(Centre::class, 'matricule', 'matricule');
     }
+
+    /**
+     * Adresse e-mail utilisée pour les notifications.
+     */
+    public function routeNotificationForMail($notification): string
+    {
+        return $this->email_perso;
+    }
+
+    /**
+     * Notification personnalisée de réinitialisation du mot de passe.
+     */
+    public function sendPasswordResetNotification($token): void
+    {
+        $this->notify(new CustomResetPasswordNotification($token));
+    }
+
+    /**
+     * Nom complet de l'utilisateur.
+     */
+    public function getNameAttribute(): string
+    {
+        return "{$this->nom} {$this->prenom}";
+    }
+
 }

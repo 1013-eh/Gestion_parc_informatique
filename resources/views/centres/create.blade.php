@@ -106,7 +106,7 @@
                                        id="adresse_ip"
                                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 @error('adresse_ip') border-red-500 @enderror"
                                        value="{{ old('adresse_ip') }}"
-                                       placeholder="Ex: 192.168.1.1"
+                                       placeholder="Ex: 192.168.1"
                                        required>
                                 @error('adresse_ip')
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
