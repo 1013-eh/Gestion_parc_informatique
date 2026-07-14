@@ -1,267 +1,191 @@
-@extends('layouts.app')
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            {{ __('Régions et Centres') }}
+        </h2>
+    </x-slot>
 
-@section('title', 'Régions et Centres')
-@section('page-title', '📍 Régions et Centres')
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
 
-@section('content')
-
-<!-- ============================================= -->
-<!-- STATISTIQUES EN HAUT                          -->
-<!-- ============================================= -->
-<div class="row g-3 mb-4">
-    <div class="col-md-3">
-        <div class="card text-white bg-primary">
-            <div class="card-body d-flex justify-content-between align-items-center">
-                <div>
-                    <h6 class="text-white-50 mb-0">Régions</h6>
-                    <h2 class="mb-0 fw-bold">{{ $regions->count() }}</h2>
+            <!-- Statistiques -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-blue-900 text-white rounded-lg shadow-sm p-4 flex justify-between items-center">
+                    <div>
+                        <p class="text-sm text-blue-200">Régions</p>
+                        <p class="text-2xl font-bold">{{ $regions->count() }}</p>
+                    </div>
                 </div>
-                <i class="fas fa-map-marker-alt fa-2x opacity-50"></i>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div class="card text-white bg-success">
-            <div class="card-body d-flex justify-content-between align-items-center">
-                <div>
-                    <h6 class="text-white-50 mb-0">Centres</h6>
-                    <h2 class="mb-0 fw-bold">{{ $centres->count() }}</h2>
+                <div class="bg-blue-800 text-white rounded-lg shadow-sm p-4 flex justify-between items-center">
+                    <div>
+                        <p class="text-sm text-blue-200">Centres</p>
+                        <p class="text-2xl font-bold">{{ $centres->count() }}</p>
+                    </div>
                 </div>
-                <i class="fas fa-building fa-2x opacity-50"></i>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div class="card text-white bg-info">
-            <div class="card-body d-flex justify-content-between align-items-center">
-                <div>
-                    <h6 class="text-white-50 mb-0">Utilisateurs</h6>
-                    <h2 class="mb-0 fw-bold">{{ \App\Models\User::count() }}</h2>
+                <div class="bg-blue-700 text-white rounded-lg shadow-sm p-4 flex justify-between items-center">
+                    <div>
+                        <p class="text-sm text-blue-200">Utilisateurs</p>
+                        <p class="text-2xl font-bold">{{ \App\Models\User::count() }}</p>
+                    </div>
                 </div>
-                <i class="fas fa-users fa-2x opacity-50"></i>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div class="card text-white bg-warning">
-            <div class="card-body d-flex justify-content-between align-items-center">
-                <div>
-                    <h6 class="text-white-50 mb-0">Matériel</h6>
-                    <h2 class="mb-0 fw-bold">{{ \App\Models\Materiel::count() ?? 0 }}</h2>
-                </div>
-                <i class="fas fa-desktop fa-2x opacity-50"></i>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- ============================================= -->
-<!-- TABLEAUX CÔTE À CÔTE                         -->
-<!-- ============================================= -->
-<div class="row g-4">
-
-    <!-- ========================================== -->
-    <!-- TABLEAU RÉGIONS (GAUCHE)                   -->
-    <!-- ========================================== -->
-    <div class="col-md-6">
-        <div class="card border-0 shadow-sm">
-            <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                <h5 class="mb-0 fw-bold text-primary">
-                    <i class="fas fa-map-marker-alt me-2"></i> Régions
-                    <span class="badge bg-primary ms-2">{{ $regions->count() }}</span>
-                </h5>
-                <a href="{{ route('regions.create') }}" class="btn btn-primary btn-sm">
-                    <i class="fas fa-plus-circle me-1"></i> Nouvelle région
-                </a>
-            </div>
-            <div class="card-body p-0">
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0">
-                        <thead class="table-dark">
-                            <tr>
-                                <th class="text-center" width="40">#</th>
-                                <th>Libellé</th>
-                                <th class="text-center" width="80">Abrév.</th>
-                                <th class="text-center" width="70">Centres</th>
-                                <th class="text-center" width="120">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse($regions as $region)
-                            <tr>
-                                <td class="text-center">{{ $loop->iteration }}</td>
-                                <td>
-                                    <i class="fas fa-flag text-primary me-1"></i>
-                                    {{ $region->libelle_region }}
-                                </td>
-                                <td class="text-center">
-                                    <span class="badge bg-info">{{ $region->abreviation }}</span>
-                                </td>
-                                <td class="text-center">
-                                    <span class="badge bg-primary rounded-pill">{{ $region->centres_count ?? 0 }}</span>
-                                </td>
-                                <td class="text-center">
-                                    <a href="{{ route('regions.show', $region->id_region) }}" 
-                                       class="btn btn-sm btn-outline-info" title="Voir">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-                                    <a href="{{ route('regions.edit', $region->id_region) }}" 
-                                       class="btn btn-sm btn-outline-warning" title="Modifier">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                    <button type="button" 
-                                            class="btn btn-sm btn-outline-danger" 
-                                            title="Supprimer"
-                                            data-bs-toggle="modal" 
-                                            data-bs-target="#deleteRegionModal{{ $region->id_region }}">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            @empty
-                            <tr>
-                                <td colspan="5" class="text-center py-4 text-muted">
-                                    <i class="fas fa-inbox fa-2x d-block mb-2"></i>
-                                    Aucune région
-                                </td>
-                            </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
+                <div class="bg-blue-600 text-white rounded-lg shadow-sm p-4 flex justify-between items-center">
+                    <div>
+                        <p class="text-sm text-blue-100">Matériel</p>
+                        <p class="text-2xl font-bold">{{ \App\Models\Materiel::count() ?? 0 }}</p>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <!-- ========================================== -->
-    <!-- TABLEAU CENTRES (DROITE)                   -->
-    <!-- ========================================== -->
-    <div class="col-md-6">
-        <div class="card border-0 shadow-sm">
-            <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                <h5 class="mb-0 fw-bold text-success">
-                    <i class="fas fa-building me-2"></i> Centres
-                    <span class="badge bg-success ms-2">{{ $centres->count() }}</span>
-                </h5>
-                <a href="{{ route('centres.create') }}" class="btn btn-success btn-sm">
-                    <i class="fas fa-plus-circle me-1"></i> Nouveau centre
-                </a>
-            </div>
-            <div class="card-body p-0">
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0">
-                        <thead class="table-dark">
-                            <tr>
-                                <th class="text-center" width="40">#</th>
-                                <th>Code</th>
-                                <th>Nom</th>
-                                <th>Région</th>
-                                <th class="text-center" width="80">Matricule</th>
-                                <th class="text-center" width="120">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse($centres as $centre)
-                            <tr>
-                                <td class="text-center">{{ $loop->iteration }}</td>
-                                <td><span class="fw-bold text-primary">{{ $centre->code_bureau }}</span></td>
-                                <td>{{ Str::limit($centre->entete ?? '—', 20) }}</td>
-                                <td>
-                                    <span class="badge bg-primary">{{ $centre->region->libelle_region ?? 'N/A' }}</span>
-                                </td>
-                                <td class="text-center">
-                                    <span class="badge bg-dark">{{ $centre->matricule }}</span>
-                                </td>
-                                <td class="text-center">
-                                    <a href="{{ route('centres.show', $centre->code_bureau) }}" 
-                                       class="btn btn-sm btn-outline-info" title="Voir">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-                                    <a href="{{ route('centres.edit', ['centre' => $centre->code_bureau]) }}"                                       class="btn btn-sm btn-outline-warning" title="Modifier">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                    <button type="button" 
-                                            class="btn btn-sm btn-outline-danger" 
-                                            title="Supprimer"
-                                            data-bs-toggle="modal" 
-                                            data-bs-target="#deleteCentreModal{{ $centre->code_bureau }}">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            @empty
-                            <tr>
-                                <td colspan="6" class="text-center py-4 text-muted">
-                                    <i class="fas fa-inbox fa-2x d-block mb-2"></i>
-                                    Aucun centre
-                                </td>
-                            </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
+            <!-- Tableaux côte à côte -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+                <!-- Régions -->
+                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                    <div class="p-6 pb-0">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-lg font-semibold text-gray-800">
+                                Régions
+                                <span class="ml-2 px-2 py-1 text-sm bg-blue-100 text-blue-800 rounded-full">{{ $regions->count() }}</span>
+                            </h3>
+                            <a href="{{ route('regions.create') }}"
+                               class="inline-flex items-center px-4 py-2 bg-blue-900 hover:bg-blue-800 text-white text-sm font-medium rounded transition-colors">
+                                Nouvelle région
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="overflow-hidden border-t border-gray-200">
+                        <table class="min-w-full divide-y divide-gray-200 divide-x divide-gray-200">
+                            <thead class="bg-blue-800">
+                                <tr class="divide-x divide-blue-700">
+                                    <th class="px-4 py-3 text-center text-xs font-semibold text-white uppercase tracking-wider" width="40">#</th>
+                                    <th class="px-4 py-3 text-left text-xs font-semibold text-white uppercase tracking-wider">Libellé</th>
+                                    <th class="px-4 py-3 text-center text-xs font-semibold text-white uppercase tracking-wider" width="80">Abrév.</th>
+                                    <th class="px-4 py-3 text-center text-xs font-semibold text-white uppercase tracking-wider" width="70">Centres</th>
+                                    <th class="px-4 py-3 text-center text-xs font-semibold text-white uppercase tracking-wider" width="150">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200">
+                                @forelse($regions as $region)
+                                <tr class="{{ $loop->even ? 'bg-gray-50' : 'bg-white' }} hover:bg-blue-50 transition-colors divide-x divide-gray-200">
+                                    <td class="px-4 py-3 text-center text-sm text-gray-500">{{ $loop->iteration }}</td>
+                                    <td class="px-4 py-3 text-sm font-medium text-gray-900">{{ $region->libelle_region }}</td>
+                                    <td class="px-4 py-3 text-center text-sm">
+                                        <span class="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">{{ $region->abreviation }}</span>
+                                    </td>
+                                    <td class="px-4 py-3 text-center text-sm">
+                                        <span class="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">{{ $region->centres_count ?? 0 }}</span>
+                                    </td>
+                                    <td class="px-4 py-3 text-center text-sm">
+                                        <div class="flex justify-center items-center space-x-2">
+                                            <a href="{{ route('regions.show', $region->id_region) }}"
+                                               class="inline-flex items-center px-2 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-medium rounded transition-colors">
+                                                Voir
+                                            </a>
+                                            <a href="{{ route('regions.edit', $region->id_region) }}"
+                                               class="inline-flex items-center px-2 py-1 bg-blue-500 hover:bg-blue-600 text-white text-xs font-medium rounded transition-colors">
+                                                Modifier
+                                            </a>
+                                            <form action="{{ route('regions.destroy', $region->id_region) }}" method="POST"
+                                                  onsubmit="return confirm('Supprimer {{ $region->libelle_region }} ?');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit"
+                                                        class="inline-flex items-center px-2 py-1 bg-red-600 hover:bg-red-700 text-white text-xs font-medium rounded transition-colors">
+                                                    Supprimer
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                                @empty
+                                <tr>
+                                    <td colspan="5" class="px-4 py-8 text-center text-sm text-gray-500">
+                                        Aucune région
+                                    </td>
+                                </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
+
+                <!-- Centres -->
+                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                    <div class="p-6 pb-0">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-lg font-semibold text-gray-800">
+                                Centres
+                                <span class="ml-2 px-2 py-1 text-sm bg-green-100 text-green-800 rounded-full">{{ $centres->count() }}</span>
+                            </h3>
+                            <a href="{{ route('centres.create') }}"
+                               class="inline-flex items-center px-4 py-2 bg-blue-900 hover:bg-blue-800 text-white text-sm font-medium rounded transition-colors">
+                                Nouveau centre
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="overflow-hidden border-t border-gray-200">
+                        <table class="min-w-full divide-y divide-gray-200 divide-x divide-gray-200">
+                            <thead class="bg-blue-800">
+                                <tr class="divide-x divide-blue-700">
+                                    <th class="px-4 py-3 text-center text-xs font-semibold text-white uppercase tracking-wider" width="40">#</th>
+                                    <th class="px-4 py-3 text-left text-xs font-semibold text-white uppercase tracking-wider">Code</th>
+                                    <th class="px-4 py-3 text-left text-xs font-semibold text-white uppercase tracking-wider">Nom</th>
+                                    <th class="px-4 py-3 text-left text-xs font-semibold text-white uppercase tracking-wider">Région</th>
+                                    <th class="px-4 py-3 text-center text-xs font-semibold text-white uppercase tracking-wider" width="80">Matricule</th>
+                                    <th class="px-4 py-3 text-center text-xs font-semibold text-white uppercase tracking-wider" width="150">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200">
+                                @forelse($centres as $centre)
+                                <tr class="{{ $loop->even ? 'bg-gray-50' : 'bg-white' }} hover:bg-blue-50 transition-colors divide-x divide-gray-200">
+                                    <td class="px-4 py-3 text-center text-sm text-gray-500">{{ $loop->iteration }}</td>
+                                    <td class="px-4 py-3 text-sm font-medium text-gray-900">
+                                        <span class="text-blue-800 font-semibold">{{ $centre->code_bureau }}</span>
+                                    </td>
+                                    <td class="px-4 py-3 text-sm text-gray-700">{{ Str::limit($centre->entete ?? '—', 20) }}</td>
+                                    <td class="px-4 py-3 text-sm">
+                                        <span class="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">{{ $centre->region->libelle_region ?? 'N/A' }}</span>
+                                    </td>
+                                    <td class="px-4 py-3 text-center text-sm">
+                                        <span class="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">{{ $centre->matricule }}</span>
+                                    </td>
+                                    <td class="px-4 py-3 text-center text-sm">
+                                        <div class="flex justify-center items-center space-x-2">
+                                            <a href="{{ route('centres.show', $centre->code_bureau) }}"
+                                               class="inline-flex items-center px-2 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-medium rounded transition-colors">
+                                                Voir
+                                            </a>
+                                            <a href="{{ route('centres.edit', ['centre' => $centre->code_bureau]) }}"
+                                               class="inline-flex items-center px-2 py-1 bg-blue-500 hover:bg-blue-600 text-white text-xs font-medium rounded transition-colors">
+                                                Modifier
+                                            </a>
+                                            <form action="{{ route('centres.destroy', $centre->code_bureau) }}" method="POST"
+                                                  onsubmit="return confirm('Supprimer le centre {{ $centre->code_bureau }} ?');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit"
+                                                        class="inline-flex items-center px-2 py-1 bg-red-600 hover:bg-red-700 text-white text-xs font-medium rounded transition-colors">
+                                                    Supprimer
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                                @empty
+                                <tr>
+                                    <td colspan="6" class="px-4 py-8 text-center text-sm text-gray-500">
+                                        Aucun centre
+                                    </td>
+                                </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
-
-</div><!-- /row -->
-
-<!-- ============================================= -->
-<!-- MODALS                                       -->
-<!-- ============================================= -->
-
-@foreach($regions as $region)
-<div class="modal fade" id="deleteRegionModal{{ $region->id_region }}" tabindex="-1">
-    <div class="modal-dialog modal-sm modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h6 class="modal-title text-danger"><i class="fas fa-exclamation-triangle me-2"></i>Confirmer</h6>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body text-center">
-                <p>Supprimer <strong>{{ $region->libelle_region }}</strong> ?</p>
-                <small class="text-muted">Action irréversible</small>
-            </div>
-            <div class="modal-footer justify-content-center">
-                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Annuler</button>
-                <form action="{{ route('regions.destroy', $region->id_region) }}" method="POST" style="display:inline">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="btn btn-danger btn-sm">
-                        <i class="fas fa-trash me-1"></i> Supprimer
-                    </button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-@endforeach
-
-@foreach($centres as $centre)
-<div class="modal fade" id="deleteCentreModal{{ $centre->code_bureau }}" tabindex="-1">
-    <div class="modal-dialog modal-sm modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h6 class="modal-title text-danger"><i class="fas fa-exclamation-triangle me-2"></i>Confirmer</h6>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body text-center">
-                <p>Supprimer le centre <strong>{{ $centre->code_bureau }}</strong> ?</p>
-                <small class="text-muted">Action irréversible</small>
-            </div>
-            <div class="modal-footer justify-content-center">
-                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Annuler</button>
-                <form action="{{ route('centres.destroy', $centre->code_bureau) }}" method="POST" style="display:inline">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="btn btn-danger btn-sm">
-                        <i class="fas fa-trash me-1"></i> Supprimer
-                    </button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-@endforeach
-
-@endsection
+</x-app-layout>

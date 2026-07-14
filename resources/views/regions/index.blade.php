@@ -1,54 +1,50 @@
-@extends('layouts.app')
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            {{ __('Liste des régions') }}
+            <span class="ml-2 px-2 py-1 text-sm bg-blue-100 text-blue-800 rounded-full">{{ $regions->count() }}</span>
+        </h2>
+    </x-slot>
 
-@section('title', 'Gestion des Régions')
-@section('page-title', '📍 Gestion des Régions')
-
-@section('content')
-<div class="py-6">
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-        <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-            <div class="p-6 text-gray-900">
-                <!-- En-tête -->
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-xl font-semibold text-gray-800">
-                        <i class="fas fa-map-marker-alt text-blue-600 mr-2"></i> Liste des régions
-                        <span class="ml-2 px-2 py-1 text-sm bg-blue-100 text-blue-800 rounded-full">{{ $regions->count() }}</span>
-                    </h2>
-                    <a href="{{ route('regions.create') }}" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                        <i class="fas fa-plus-circle mr-1"></i> Nouvelle région
-                    </a>
-                </div>
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
 
                 @if(session('success'))
-                    <div class="mb-4 p-4 bg-green-100 border-l-4 border-green-500 text-green-700">
-                        <i class="fas fa-check-circle mr-2"></i> {{ session('success') }}
+                    <div class="mb-4 p-4 bg-green-100 text-green-800 rounded">
+                        {{ session('success') }}
                     </div>
                 @endif
 
                 @if(session('error'))
-                    <div class="mb-4 p-4 bg-red-100 border-l-4 border-red-500 text-red-700">
-                        <i class="fas fa-exclamation-circle mr-2"></i> {{ session('error') }}
+                    <div class="mb-4 p-4 bg-red-100 text-red-800 rounded">
+                        {{ session('error') }}
                     </div>
                 @endif
 
-                <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">#</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Libellé</th>
-                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Abréviation</th>
-                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Centres</th>
-                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                <div class="flex justify-end mb-4">
+                    <a href="{{ route('regions.create') }}"
+                       class="inline-block px-4 py-2 bg-blue-900 text-white rounded hover:bg-blue-800">
+                        {{ __('Nouvelle région') }}
+                    </a>
+                </div>
+
+                <div class="overflow-hidden rounded-lg border border-gray-200">
+                    <table class="min-w-full divide-y divide-gray-200 divide-x divide-gray-200">
+                        <thead class="bg-blue-800">
+                            <tr class="divide-x divide-blue-700">
+                                <th class="px-6 py-3 text-center text-xs font-semibold text-white uppercase tracking-wider">#</th>
+                                <th class="px-6 py-3 text-left text-xs font-semibold text-white uppercase tracking-wider">Libellé</th>
+                                <th class="px-6 py-3 text-center text-xs font-semibold text-white uppercase tracking-wider">Abréviation</th>
+                                <th class="px-6 py-3 text-center text-xs font-semibold text-white uppercase tracking-wider">Centres</th>
+                                <th class="px-6 py-3 text-center text-xs font-semibold text-white uppercase tracking-wider">Actions</th>
                             </tr>
                         </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
+                        <tbody class="divide-y divide-gray-200">
                             @forelse($regions as $region)
-                            <tr>
+                            <tr class="{{ $loop->even ? 'bg-gray-50' : 'bg-white' }} hover:bg-blue-50 transition-colors divide-x divide-gray-200">
                                 <td class="px-6 py-4 text-center text-sm text-gray-500">{{ $loop->iteration }}</td>
-                                <td class="px-6 py-4 text-sm font-medium text-gray-900">
-                                    <i class="fas fa-flag text-blue-600 mr-2"></i> {{ $region->libelle_region }}
-                                </td>
+                                <td class="px-6 py-4 text-sm font-medium text-gray-900">{{ $region->libelle_region }}</td>
                                 <td class="px-6 py-4 text-center text-sm">
                                     <span class="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">{{ $region->abreviation }}</span>
                                 </td>
@@ -58,20 +54,17 @@
                                 <td class="px-6 py-4 text-center text-sm">
                                     <div class="flex justify-center items-center space-x-3">
                                         @if(auth()->check() && (auth()->user()->matricule ?? null) == 1)
-
                                             <a href="{{ route('regions.edit', $region->id_region) }}"
-                                               class="inline-flex items-center px-3 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-md text-xs font-semibold transition"
-                                               title="Modifier">
-                                                <i class="fas fa-edit mr-2"></i> Modifier
+                                               class="inline-flex items-center justify-center px-4 py-2 bg-blue-500 text-white text-sm font-medium rounded hover:bg-blue-600 transition-colors">
+                                                Modifier
                                             </a>
 
                                             <form action="{{ route('regions.destroy', $region->id_region) }}" method="POST" onsubmit="return confirm('Supprimer cette région définitivement ?');">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit"
-                                                        class="inline-flex items-center px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md text-xs font-semibold transition"
-                                                        title="Supprimer">
-                                                    <i class="fas fa-trash mr-2"></i> Supprimer
+                                                        class="inline-flex items-center justify-center px-4 py-2 bg-red-600 text-white text-sm font-medium rounded hover:bg-red-700 transition-colors">
+                                                    Supprimer
                                                 </button>
                                             </form>
                                         @endif
@@ -80,8 +73,7 @@
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500">
-                                    <i class="fas fa-inbox fa-2x d-block mb-2 text-gray-300"></i>
+                                <td colspan="5" class="px-6 py-8 text-center text-sm text-gray-500">
                                     Aucune région trouvée
                                 </td>
                             </tr>
@@ -92,5 +84,4 @@
             </div>
         </div>
     </div>
-</div>
-@endsection
+</x-app-layout>
