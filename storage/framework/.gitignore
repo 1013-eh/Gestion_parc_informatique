@@ -1,9 +1,9 @@
 compiled.php
 config.php
 down
-events.scanned.php
+events.php
 maintenance.php
+routes-v7.php
 routes.php
-routes.scanned.php
 schedule-*
 services.json
