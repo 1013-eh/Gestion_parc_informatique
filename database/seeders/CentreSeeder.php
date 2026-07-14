@@ -16,7 +16,7 @@ class CentreSeeder extends Seeder
             'matricule' => 1,
             'adresse_ip' => '192.168.1.1',
             'dernier_num_ordre' => 0,
-            'type_consultation' => 'GLOBAL',
+            'type_consultation' => 'ADMIN',
         ]);
 
         Centre::create([
@@ -36,7 +36,7 @@ class CentreSeeder extends Seeder
             'matricule' => 3,
             'adresse_ip' => '192.168.3.1',
             'dernier_num_ordre' => 0,
-            'type_consultation' => 'ADMIN',
+            'type_consultation' => 'GLOBAL',
         ]);
     }
 }

@@ -27,6 +27,7 @@ class MaterielController extends Controller
         if (!$user->canViewAllCentres()) {
             $query->where('code_bureau', $user->centre->code_bureau);
         }
+
         $materiels = $query->get();
         return view('materiels/materiels', compact('materiels'));
     }
@@ -194,7 +195,7 @@ class MaterielController extends Controller
 
     public function export()
     {
-        return Excel::download(new MaterielsExport, 'materiels.xlsx');
+        return Excel::download(new MaterielsExport(auth()->user()), 'materiels.xlsx');
     }
 
     public function downloadTemplate()
