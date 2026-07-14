@@ -10,11 +10,23 @@ use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 
 class MaterielsExport implements FromCollection, WithMapping, WithHeadings, ShouldAutoSize
 {
+    protected $user;
+
+    public function __construct($user)
+    {
+        $this->user = $user;
+    }
+
     public function collection()
     {
-        return Materiel::with('modele.marque.sousFamille.famille', 'centre.region')
-            ->where('etat', '!=', 'ARCHIVE')
-            ->get();
+        $query = Materiel::with('modele.marque.sousFamille.famille', 'centre.region')
+            ->where('etat', '!=', 'ARCHIVE');
+
+        if (!$this->user->canViewAllCentres()) {
+            $query->where('code_bureau', $this->user->centre->code_bureau);
+        }
+
+        return $query->get();
     }
 
     public function map($materiel): array

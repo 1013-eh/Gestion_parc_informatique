@@ -69,7 +69,7 @@
                         <li><strong>date_affectation</strong> : Date au format YYYY-MM-DD</li>
                         <li><strong>etat</strong> : BON, EN_PANNE ou HORS_USAGE</li>
                     </ul>
-                    <p class="text-sm text-gray-600 mt-2 italic">
+                    <p class="text-sm text-gray-600 mt-2">
                         Les champs CAB, N° Marché, Machine et N° Ordre sont générés automatiquement.
                     </p>
                 </div>
