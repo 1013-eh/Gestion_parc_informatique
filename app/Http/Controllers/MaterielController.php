@@ -15,18 +15,25 @@ use App\Exports\MaterielsExport;
 use App\Exports\MaterielTemplateExport;
 use App\Imports\MaterielsImport;
 
+
 class MaterielController extends Controller
 {
     public function index()
     {
-        $materiels = Materiel::with('modele.marque.sousFamille')
-            ->where('etat', '!=', 'ARCHIVE')
-            ->get();
+        $user = auth()->user();
+        $query = Materiel::with('modele.marque.sousFamille')
+            ->where('etat', '!=', 'ARCHIVE');
+
+        if (!$user->canViewAllCentres()) {
+            $query->where('code_bureau', $user->centre->code_bureau);
+        }
+        $materiels = $query->get();
         return view('materiels/materiels', compact('materiels'));
     }
 
     public function create()
     {
+        $this->authorize('modify', Materiel::class);
         $familles = Famille::all();
         $centres = Centre::all();
         return view('materiels.create', compact('familles', 'centres'));
@@ -34,6 +41,7 @@ class MaterielController extends Controller
 
     public function store(Request $request)
     {
+        $this->authorize('modify', Materiel::class);
         $validated = $request->validate([
             'num_serie'       => 'required|string|max:15|unique:materiels,num_serie|regex:/^SN [A-Z0-9]{8}$/',
             'id_modele'       => 'required|integer|exists:modeles,id_modele',
@@ -57,9 +65,9 @@ class MaterielController extends Controller
             $nextCabNum = $lastCab ? ((int) substr($lastCab->cab, 3)) + 1 : 200001;
             $validated['cab'] = 'BAM' . $nextCabNum;
 
+
             if ($isPosteDeTravail) {
                 $centre = Centre::findOrFail($validated['code_bureau']);
-
                 $centre = Centre::where('code_bureau', $validated['code_bureau'])
                     ->lockForUpdate()
                     ->first();
@@ -95,6 +103,7 @@ class MaterielController extends Controller
 
     public function edit(Materiel $materiel)
     {
+        $this->authorize('modify', $materiel);
         $familles = Famille::all();
         $centres = Centre::all();
 
@@ -111,6 +120,7 @@ class MaterielController extends Controller
 
     public function update(Request $request, Materiel $materiel)
     {
+        $this->authorize('modify', $materiel);
         $validated = $request->validate([
             'num_serie'       => 'required|string|max:15|unique:materiels,num_serie,' . $materiel->num_serie . ',num_serie|regex:/^SN [A-Z0-9]{8}$/',
             'id_modele'       => 'required|integer|exists:modeles,id_modele',

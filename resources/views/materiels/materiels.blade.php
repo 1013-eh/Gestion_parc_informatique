@@ -22,18 +22,22 @@
                 @endif
 
                 <div class="mb-4 flex gap-2">
-                    <a href="{{ route('materiels.create') }}"
-                    class="inline-block px-4 py-2 bg-blue-900 text-white rounded hover:bg-blue-800">
-                        {{ __('Ajouter un matériel') }}
-                    </a>
+                    @if(auth()->user()->isAdmin())
+                        <a href="{{ route('materiels.create') }}"
+                        class="inline-block px-4 py-2 bg-blue-900 text-white rounded hover:bg-blue-800">
+                           {{ __('Ajouter un matériel') }}
+                        </a>
+                    @endif
                     <a href="{{ route('materiels.export') }}"
                     class="inline-block px-4 py-2 bg-green-600 text-white rounded hover:bg-green-500">
                         Exporter (Excel)
                     </a>
-                    <a href="{{ route('materiels.import.form') }}"
-                    class="inline-block px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-500">
-                        Importer (Excel)
-                    </a>
+                    @if(auth()->user()->isAdmin())
+                        <a href="{{ route('materiels.import.form') }}"
+                        class="inline-block px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-500">
+                           Importer (Excel)
+                        </a>
+                    @endif
                 </div>
 
                 <div class="overflow-hidden rounded-lg border border-gray-200 overflow-x-auto">
@@ -52,7 +56,9 @@
                                 <th class="px-4 py-3 text-left text-xs font-semibold text-white uppercase tracking-wider whitespace-nowrap">N° Ordre</th>
                                 <th class="px-4 py-3 text-left text-xs font-semibold text-white uppercase tracking-wider whitespace-nowrap">Machine</th>
                                 <th class="px-4 py-3 text-left text-xs font-semibold text-white uppercase tracking-wider whitespace-nowrap">État</th>
-                                <th class="px-4 py-3 text-center text-xs font-semibold text-white uppercase tracking-wider whitespace-nowrap">Actions</th>
+                                @if(auth()->user()->isAdmin())
+                                    <th class="px-4 py-3 text-center text-xs font-semibold text-white uppercase tracking-wider whitespace-nowrap">Actions</th>
+                                @endif
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-200">
@@ -78,16 +84,18 @@
                                             {{ $m->etat }}
                                         </span>
                                     </td>
-                                    <td class="px-4 py-4 text-sm text-center whitespace-nowrap">
-                                        <a href="{{ route('materiels.edit', $m->num_serie) }}"
-                                           class="inline-flex items-center justify-center px-4 py-2 bg-blue-500 text-white text-sm font-medium rounded hover:bg-blue-600 transition-colors">
-                                            Modifier
-                                        </a>
-                                    </td>
+                                    @if(auth()->user()->isAdmin())
+                                        <td class="px-4 py-4 text-sm text-center whitespace-nowrap">
+                                           <a href="{{ route('materiels.edit', $m->num_serie) }}"
+                                              class="inline-flex items-center justify-center px-4 py-2 bg-blue-500 text-white text-sm font-medium rounded hover:bg-blue-600 transition-colors">
+                                               Modifier
+                                            </a>
+                                        </td>
+                                    @endif
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="13" class="px-4 py-8 text-center text-gray-500">
+                                    <td colspan="{{ auth()->user()->isAdmin() ? 13 : 12 }}" class="px-4 py-8 text-center text-gray-500">
                                         Aucun matériel trouvé.
                                     </td>
                                 </tr>
