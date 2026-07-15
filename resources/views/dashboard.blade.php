@@ -141,7 +141,7 @@
             </div>
 
             {{-- Archives --}}
-            <div class="bg-red-50 rounded-lg shadow-sm border border-gray p-6">
+            <div class="bg-red-50 rounded-lg shadow-sm border border-red-200 p-6">
                 <h3 class="text-sm font-semibold text-red-900 uppercase tracking-wide mb-4">Matériels archivés</h3>
 
                 <div class="flex items-center gap-3">
@@ -149,12 +149,32 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="M5 8h14M5 8a2 2 0 01-2-2V5a1 1 0 011-1h16a1 1 0 011 1v1a2 2 0 01-2 2M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8M10 12h4" />
                     </svg>
                     <div>
-                        <p class="text-xs text-red-800">Archives{{ $isGlobalView ? '' : ' (mon centre)' }}</p>
-                        <p class="text-2xl font-bold text-red-950">{{ $archivesTotal }}</p>
+                    <p class="text-xs text-red-800">Archives{{ $isGlobalView ? '' : ' (mon centre)' }}</p>
+                    <p class="text-2xl font-bold text-red-950">{{ $archivesTotal }}</p>
                     </div>
                 </div>
-            </div>
 
+                @if($isGlobalView)
+                <div class="mt-5 pt-5 border-t border-red-200">
+                    <table class="min-w-full divide-y divide-red-200 text-sm">
+                        <thead>
+                        <tr>
+                            <th class="px-0 py-2 text-left font-medium text-red-800">Centre</th>
+                            <th class="px-0 py-2 text-left font-medium text-red-800">Archives</th>
+                        </tr>
+                        </thead>
+                    <tbody class="divide-y divide-red-200">
+                        @foreach($archivesParCentre as $row)
+                        <tr>
+                            <td class="px-0 py-2 text-red-900">{{ $row['centre']->nom_centre ?? 'N/A' }}</td>
+                            <td class="px-0 py-2 font-semibold text-red-950">{{ $row['total'] }}</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                    </table>
+                </div>
+                @endif
+            </div>
         </div>
     </div>
 </x-app-layout>

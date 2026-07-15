@@ -23,7 +23,7 @@
                     <x-nav-link :href="route('regions.index')" :active="request()->routeIs('regions.*')">
                         {{ __('Regions') }}
                     </x-nav-link>
-                    @if(auth()->user()->centre->type_consultation === 'ADMIN')
+                    @if(auth()->user()->centre->type_consultation === 'ADMIN' or auth()->user()->centre->type_consultation === 'GLOBAL')
                     <x-nav-link :href="route('centres.index')" :active="request()->routeIs('centres.*')">
                         {{ __('Centres') }}
                     </x-nav-link>
