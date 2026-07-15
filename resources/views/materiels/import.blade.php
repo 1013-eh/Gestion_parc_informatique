@@ -15,9 +15,15 @@
                     </div>
                 @endif
 
+                @if(session('warning'))
+                    <div class="mb-4 p-4 bg-yellow-100 text-yellow-800 rounded">
+                        {!! session('warning') !!}
+                    </div>
+                @endif
+
                 @if(session('error'))
                     <div class="mb-4 p-4 bg-red-100 text-red-800 rounded">
-                        {{ session('error') }}
+                        {!! session('error') !!}
                     </div>
                 @endif
 

@@ -59,6 +59,8 @@ class LoginRequest extends FormRequest
             ]);
         }
 
+        
+
         // Vérifier le mot de passe
         if (!Hash::check($this->password, $user->password)) {
 

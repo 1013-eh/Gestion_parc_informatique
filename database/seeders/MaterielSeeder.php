@@ -40,7 +40,7 @@ class MaterielSeeder extends Seeder
             'cab' => 'BAM200003',
             'num_marche' => 'I-2026-003',
             'date_affectation' => '2026-07-03',
-            'num_ordre' => 2,
+            'num_ordre' => 1,
             'machine' => 'CAS96519-001',
             'etat' => 'EN_PANNE',
         ]);
