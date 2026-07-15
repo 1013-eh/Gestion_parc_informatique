@@ -59,7 +59,17 @@ class LoginRequest extends FormRequest
             ]);
         }
 
-        
+        // IP check
+        $requestIp = $this->ip();
+        $lastDot = strrpos($requestIp, '.');
+        if ($lastDot !== false) {
+            $ipPrefix = substr($requestIp, 0, $lastDot);
+            if ($ipPrefix !== $user->centre->adresse_ip) {
+                throw ValidationException::withMessages([
+                    'email' => 'Connexion refusée : vous devez vous connecter depuis le réseau de votre centre.',
+                ]);
+            }
+        }
 
         // Vérifier le mot de passe
         if (!Hash::check($this->password, $user->password)) {
