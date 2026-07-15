@@ -214,14 +214,34 @@ class MaterielController extends Controller
             'file' => 'required|file|mimes:xlsx,xls,csv',
         ]);
 
+        $import = new MaterielsImport;
+
         try {
-            Excel::import(new MaterielsImport, $request->file('file'));
-            return redirect()->route('materiels.index')
-                ->with('success', 'Importation réussie.');
+            Excel::import($import, $request->file('file'));
         } catch (\Illuminate\Database\QueryException $e) {
             return back()->with('error', 'Erreur base de données : doublon ou contrainte violée. Vérifiez que les numéros de série sont uniques.');
         } catch (\Throwable $e) {
             return back()->with('error', $e->getMessage());
         }
+
+        $successCount = $import->getSuccessCount();
+        $validationErrors = $import->getValidationErrors();
+        $dbErrors = $import->errors()->map(fn($e) => $e->getMessage())->toArray();
+        $allErrors = array_merge($validationErrors, $dbErrors);
+
+        if (empty($allErrors)) {
+            return redirect()->route('materiels.index')
+                ->with('success', "Importation réussie : {$successCount} matériel(s) importé(s).");
+        }
+
+        $errorMessages = collect($allErrors)->map(fn($msg) => "• {$msg}")->implode('<br>');
+
+        if ($successCount > 0) {
+            return redirect()->route('materiels.index')
+                ->with('success', "{$successCount} matériel(s) importé(s).")
+                ->with('warning', count($allErrors) . " ligne(s) ignorée(s) :<br>{$errorMessages}");
+        }
+
+        return back()->with('error', "Aucun matériel importé. Erreurs :<br>{$errorMessages}");
     }
 }
