@@ -23,9 +23,11 @@
                     <x-nav-link :href="route('regions.index')" :active="request()->routeIs('regions.*')">
                         {{ __('Regions') }}
                     </x-nav-link>
+                    @if(auth()->user()->centre->type_consultation === 'ADMIN')
                     <x-nav-link :href="route('centres.index')" :active="request()->routeIs('centres.*')">
                         {{ __('Centres') }}
                     </x-nav-link>
+                    @endif
                     <x-nav-link :href="route('materiels.index')" :active="request()->routeIs('materiels.*')">
                         {{ __('Liste materielles informatique') }}
                     </x-nav-link>
