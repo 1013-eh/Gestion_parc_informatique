@@ -44,6 +44,14 @@ class DashboardController extends Controller
             ->with('centre')
             ->get();
 
+        $archivesParCentre = Archive::whereHas('materiel')
+            ->with('materiel.centre')
+            ->get()
+            ->groupBy(fn ($a) => $a->materiel->code_bureau)
+            ->map(fn ($group) => [
+                'centre' => $group->first()->materiel->centre,
+                'total' => $group->count(),
+            ]);
         return [
             'isGlobalView'       => true,
             'regions'            => Region::all(),
@@ -53,6 +61,7 @@ class DashboardController extends Controller
             'materielsTotal'     => Materiel::where('etat', '!=', 'ARCHIVE')->count(),
             'materielsParCentre' => $materielsParCentre,
             'archivesTotal'      => Archive::count(),
+            'archivesParCentre'  => $archivesParCentre,
         ];
     }
 
