@@ -18,7 +18,7 @@ use App\Imports\MaterielsImport;
 
 class MaterielController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $user = auth()->user();
         $query = Materiel::with('modele.marque.sousFamille')
@@ -28,8 +28,87 @@ class MaterielController extends Controller
             $query->where('code_bureau', $user->centre->code_bureau);
         }
 
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('num_serie', 'like', "%{$search}%")
+                  ->orWhere('cab', 'like', "%{$search}%")
+                  ->orWhere('num_marche', 'like', "%{$search}%")
+                  ->orWhere('num_ordre', 'like', "%{$search}%")
+                  ->orWhere('machine', 'like', "%{$search}%")
+                  ->orWhereHas('centre', fn($q) => $q->where('nom_centre', 'like', "%{$search}%"))
+                  ->orWhereHas('modele', fn($q) => $q->where('nom_modele', 'like', "%{$search}%"))
+                  ->orWhereHas('modele.marque', fn($q) => $q->where('nom_marque', 'like', "%{$search}%"))
+                  ->orWhereHas('modele.marque.sousFamille', fn($q) => $q->where('nom_sous_famille', 'like', "%{$search}%"));
+            });
+        }
+
+        if ($request->filled('etat')) {
+            $query->where('etat', $request->etat);
+        }
+
+        if ($request->filled('code_bureau')) {
+            $query->where('code_bureau', $request->code_bureau);
+        }
+
+        if ($request->filled('sous_famille')) {
+            $query->whereHas('modele.marque.sousFamille', fn($q) => $q->where('id_sous_famille', $request->sous_famille));
+        }
+
+        $sortBy = $request->sort_by;
+        $sortOrder = $request->sort_order === 'asc' ? 'asc' : 'desc';
+
+        $sortable = ['num_serie', 'centre', 'code_bureau', 'sous_famille', 'marque', 'modele', 'cab', 'num_marche', 'num_ordre', 'machine', 'date_affectation', 'etat'];
+
+        if (in_array($sortBy, $sortable)) {
+            $sortColumns = [
+                'num_serie' => 'materiels.num_serie',
+                'centre' => 'centres.nom_centre',
+                'code_bureau' => 'materiels.code_bureau',
+                'sous_famille' => 'sous_familles.nom_sous_famille',
+                'marque' => 'marques.nom_marque',
+                'modele' => 'modeles.nom_modele',
+                'cab' => 'materiels.cab',
+                'num_marche' => 'materiels.num_marche',
+                'num_ordre' => 'materiels.num_ordre',
+                'machine' => 'materiels.machine',
+                'date_affectation' => 'materiels.date_affectation',
+                'etat' => 'materiels.etat',
+            ];
+
+            $joins = [
+                'centre' => [['centres', 'materiels.code_bureau', '=', 'centres.code_bureau']],
+                'sous_famille' => [
+                    ['modeles', 'materiels.id_modele', '=', 'modeles.id_modele'],
+                    ['marques', 'modeles.id_marque', '=', 'marques.id_marque'],
+                    ['sous_familles', 'marques.id_sous_famille', '=', 'sous_familles.id_sous_famille'],
+                ],
+                'marque' => [
+                    ['modeles', 'materiels.id_modele', '=', 'modeles.id_modele'],
+                    ['marques', 'modeles.id_marque', '=', 'marques.id_marque'],
+                ],
+                'modele' => [
+                    ['modeles', 'materiels.id_modele', '=', 'modeles.id_modele'],
+                ],
+            ];
+
+            if (isset($joins[$sortBy])) {
+                foreach ($joins[$sortBy] as $join) {
+                    $query->leftJoin($join[0], $join[1], $join[2], $join[3]);
+                }
+                $query->select('materiels.*');
+            }
+
+            $query->orderBy($sortColumns[$sortBy], $sortOrder);
+        } else {
+            $query->orderBy('materiels.date_affectation', 'desc');
+        }
+
         $materiels = $query->get();
-        return view('materiels/materiels', compact('materiels'));
+        $centres = Centre::all();
+        $sousFamilles = SousFamille::all();
+
+        return view('materiels/materiels', compact('materiels', 'centres', 'sousFamilles'));
     }
 
     public function create()

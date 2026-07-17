@@ -21,4 +21,7 @@
 /vendor
 Homestead.json
 Homestead.yaml
-Thumbs.db".aider.input.history" 
+Thumbs.db
+.aider.input.history
+.aider.chat.history.md
+.aider*

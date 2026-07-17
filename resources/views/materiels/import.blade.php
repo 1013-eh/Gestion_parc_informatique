@@ -79,7 +79,6 @@
                         Les champs CAB, N° Marché, Machine et N° Ordre sont générés automatiquement.
                     </p>
                 </div>
-
             </div>
         </div>
     </div>
