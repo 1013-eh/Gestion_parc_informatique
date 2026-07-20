@@ -71,7 +71,7 @@ class LoginRequest extends FormRequest
             }
         } else {
             throw ValidationException::withMessages([
-                'email' => 'Connexion refusée : vous devez vous connecter depuis le réseau de votre centre.',
+                'matricule' => 'Connexion refusée : vous devez vous connecter depuis le réseau de votre centre.',
             ]);
         }
 
