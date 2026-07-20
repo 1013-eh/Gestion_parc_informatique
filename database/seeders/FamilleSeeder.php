@@ -13,5 +13,11 @@ class FamilleSeeder extends Seeder
         Famille::create(['nom_famille' => 'Imprimante']);
         Famille::create(['nom_famille' => 'Sauvegarde']);
         Famille::create(['nom_famille' => 'Salle Serveur']);
+        Famille::create(['nom_famille' => 'Mecano Graphique Balance']);
+        Famille::create(['nom_famille' => 'Mecano Graphique Machine']);
+        Famille::create(['nom_famille' => 'Telecom']);
+        Famille::create(['nom_famille' => 'PDA']);
+        Famille::create(['nom_famille' => 'LCB']);
+        Famille::create(['nom_famille' => 'Divers']);
     }
 }

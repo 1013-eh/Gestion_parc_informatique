@@ -78,7 +78,7 @@ class MaterielsImport implements ToModel, WithHeadingRow, WithChunkReading, Skip
             return null;
         }
 
-        if (!preg_match('/^SN [A-Z0-9]{8}$/', $row['num_serie'])) {
+        if (!preg_match('/^SN [A-Z0-9]{8,}$/', $row['num_serie'])) {
             $this->addValidationError("Le numéro de série '{$row['num_serie']}' ne respecte pas le format SN suivi de 8 caractères alphanumériques (ex: SN A1B2C3D4).");
             return null;
         }
@@ -118,8 +118,13 @@ class MaterielsImport implements ToModel, WithHeadingRow, WithChunkReading, Skip
             return null;
         }
 
-        $allowedEtats = ['BON', 'EN_PANNE', 'HORS_USAGE'];
-        $etat = strtoupper($row['etat'] ?? '');
+        $allowedEtats = ['BON', 'EN_PANNE', 'HORS_USAGE', 'ARCHIVE'];
+        $etatRaw = $row['etat'] ?? '';
+        if (empty($etatRaw)) {
+            $this->addValidationError("L'état est requis (SN: {$row['num_serie']}).");
+            return null;
+        }
+        $etat = strtoupper(preg_replace('/\s+/', '_', trim($etatRaw)));
         if (!in_array($etat, $allowedEtats)) {
             $this->addValidationError("État '{$row['etat']}' invalide (SN: {$row['num_serie']}). Valeurs autorisées : " . implode(', ', $allowedEtats) . ".");
             return null;

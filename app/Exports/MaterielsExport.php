@@ -32,14 +32,14 @@ class MaterielsExport implements FromCollection, WithMapping, WithHeadings, Shou
     public function map($materiel): array
     {
         return [
-            $materiel->num_serie,
+            $materiel->centre?->region?->libelle_region ?? '',
+            $materiel->centre?->nom_centre ?? '',
+            $materiel->code_bureau,
             $materiel->modele?->marque?->sousFamille?->famille?->nom_famille ?? '',
             $materiel->modele?->marque?->sousFamille?->nom_sous_famille ?? '',
             $materiel->modele?->marque?->nom_marque ?? '',
             $materiel->modele?->nom_modele ?? '',
-            $materiel->code_bureau,
-            $materiel->centre?->nom_centre ?? '',
-            $materiel->centre?->region?->libelle_region ?? '',
+            $materiel->num_serie,
             $materiel->cab,
             $materiel->num_marche,
             $materiel->date_affectation,
@@ -52,14 +52,14 @@ class MaterielsExport implements FromCollection, WithMapping, WithHeadings, Shou
     public function headings(): array
     {
         return [
-            'Numéro de Série',
+            'Région',
+            'Centre',
+            'Code Bureau',
             'Famille',
             'Sous-Famille',
             'Marque',
             'Modèle',
-            'Code Bureau',
-            'Centre',
-            'Région',
+            'Numéro de Série',
             'CAB',
             'N° Marché',
             'Date Affectation',

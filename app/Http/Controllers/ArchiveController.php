@@ -64,7 +64,7 @@ class ArchiveController extends Controller
             'num_serie' => [
                 'required',
                 'string',
-                'regex:/^SN [A-Z0-9]{8}$/',
+                'regex:/^SN [A-Z0-9]{8,}$/',
                 function ($attribute, $value, $fail) {
                     $materiel = Materiel::find($value);
 
@@ -140,7 +140,7 @@ class ArchiveController extends Controller
             'num_serie' => [
                 'required',
                 'string',
-                'regex:/^SN [A-Z0-9]{8}$/',
+                'regex:/^SN [A-Z0-9]{8,}$/',
                 function ($attribute, $value, $fail) {
                     // Ici on modifie une archive existante : le matériel lié
                     // est normalement déjà à l'état ARCHIVE, donc on vérifie
@@ -151,8 +151,13 @@ class ArchiveController extends Controller
                 },
             ],
             'description' => 'required|string|max:200',
-            'etat' => 'required|in:ARCHIVE,BON,EN_PANNE,HORS_USAGE',
+            'etat' => 'required|string',
         ]);
+
+        $validated['etat'] = strtoupper(preg_replace('/\s+/', '_', trim($validated['etat'])));
+        if (!in_array($validated['etat'], ['BON', 'EN_PANNE', 'HORS_USAGE', 'ARCHIVE'])) {
+            return back()->withInput()->with('error', "État '{$validated['etat']}' invalide. Valeurs possibles : BON, EN_PANNE, HORS_USAGE, ARCHIVE.");
+        }
 
         try {
             DB::transaction(function () use ($archive, $validated) {
