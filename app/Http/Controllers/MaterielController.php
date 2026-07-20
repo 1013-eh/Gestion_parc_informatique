@@ -104,7 +104,7 @@ class MaterielController extends Controller
             $query->orderBy('materiels.date_affectation', 'desc');
         }
 
-        $materiels = $query->get();
+        $materiels = $query->paginate(25);
         $centres = Centre::all();
         $sousFamilles = SousFamille::all();
 
@@ -123,12 +123,18 @@ class MaterielController extends Controller
     {
         $this->authorize('modify', Materiel::class);
         $validated = $request->validate([
-            'num_serie'       => 'required|string|max:15|unique:materiels,num_serie|regex:/^SN [A-Z0-9]{8}$/',
+            'num_serie'       => 'required|string|max:15|unique:materiels,num_serie|regex:/^SN [A-Z0-9]{8,}$/',
             'id_modele'       => 'required|integer|exists:modeles,id_modele',
             'code_bureau'     => 'required|integer|exists:centres,code_bureau',
             'date_affectation'=> 'required|date|before_or_equal:today',
-            'etat'            => 'required|in:BON,EN_PANNE,HORS_USAGE',
+            'etat'            => 'required|string',
         ]);
+
+        $validated['etat'] = strtoupper(preg_replace('/\s+/', '_', trim($validated['etat'])));
+        $allowedEtats = ['BON', 'EN_PANNE', 'HORS_USAGE', 'ARCHIVE'];
+        if (!in_array($validated['etat'], $allowedEtats)) {
+            return back()->withInput()->with('error', "État invalide. Valeurs possibles : " . implode(', ', $allowedEtats) . ".");
+        }
 
         DB::transaction(function () use ($validated, &$materiel) {
             $modele = Modele::with('marque.sousFamille.famille')->findOrFail($validated['id_modele']);
@@ -202,12 +208,18 @@ class MaterielController extends Controller
     {
         $this->authorize('modify', $materiel);
         $validated = $request->validate([
-            'num_serie'       => 'required|string|max:15|unique:materiels,num_serie,' . $materiel->num_serie . ',num_serie|regex:/^SN [A-Z0-9]{8}$/',
+            'num_serie'       => 'required|string|max:15|unique:materiels,num_serie,' . $materiel->num_serie . ',num_serie|regex:/^SN [A-Z0-9]{8,}$/',
             'id_modele'       => 'required|integer|exists:modeles,id_modele',
             'code_bureau'     => 'required|integer|exists:centres,code_bureau',
             'date_affectation'=> 'required|date|before_or_equal:today',
-            'etat'            => 'required|in:BON,EN_PANNE,HORS_USAGE,ARCHIVE',
+            'etat'            => 'required|string',
         ]);
+
+        $validated['etat'] = strtoupper(preg_replace('/\s+/', '_', trim($validated['etat'])));
+        $allowedEtats = ['BON', 'EN_PANNE', 'HORS_USAGE', 'ARCHIVE'];
+        if (!in_array($validated['etat'], $allowedEtats)) {
+            return back()->withInput()->with('error', "État invalide. Valeurs possibles : " . implode(', ', $allowedEtats) . ".");
+        }
 
         DB::transaction(function () use ($validated, $materiel) {
             $modele = Modele::with('marque.sousFamille.famille')->findOrFail($validated['id_modele']);

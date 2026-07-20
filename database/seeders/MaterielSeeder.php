@@ -17,7 +17,7 @@ class MaterielSeeder extends Seeder
             'num_marche' => 'I-2026-001',
             'date_affectation' => '2026-07-01',
             'num_ordre' => 1,
-            'machine' => 'AGR96518-001',
+            'machine' => 'MRK96518-001',
             'etat' => 'BON',
         ]);
 
@@ -41,7 +41,7 @@ class MaterielSeeder extends Seeder
             'num_marche' => 'I-2026-003',
             'date_affectation' => '2026-07-03',
             'num_ordre' => 1,
-            'machine' => 'CAS96519-001',
+            'machine' => 'MRK96519-001',
             'etat' => 'EN_PANNE',
         ]);
     }
