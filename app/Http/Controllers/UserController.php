@@ -41,7 +41,6 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-
         $request->validate([
             'matricule' => 'required|digits:8|unique:users',
             'nom' => 'required',
@@ -66,9 +65,9 @@ class UserController extends Controller
             'etat'        => $request->etat,
             'first_login' => true,
         ]);
-        Mail::to($request->email_perso)->send(new CompteUtilisateurMail($email, $password));
+        Mail::to($request->email_perso)->send(new CompteUtilisateurMail($request->matricule, $password));
         return redirect()->route('users.index')
-            ->with('success', 'Utilisateur ajouté avec succès.');
+        ->with('success', 'Utilisateur ajouté avec succès.');
     }
 
     /**

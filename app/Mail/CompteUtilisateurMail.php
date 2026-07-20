@@ -12,15 +12,15 @@ class CompteUtilisateurMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $email;
+    public $matricule;
     public $password;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($email, $password)
+    public function __construct($matricule, $password)
     {
-        $this->email = $email;
+        $this->matricule = $matricule;
         $this->password = $password;
     }
 

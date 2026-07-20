@@ -31,7 +31,7 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required', 'string', 'email'],
+            'matricule' => ['required', 'string'],
             'password' => ['required', 'string'],
         ];
     }
@@ -43,19 +43,19 @@ class LoginRequest extends FormRequest
      */
     public function authenticate(): void
     {
-        $user = User::where('email', $this->email)->first();
+        $user = User::where('matricule', $this->matricule)->first();
 
         // Utilisateur inexistant
         if (!$user) {
             throw ValidationException::withMessages([
-                'email' => 'Adresse e-mail ou mot de passe incorrect.',
+                'matricule' => 'Matricule ou mot de passe incorrect.',
             ]);
         }
 
         // Vérifier que l'utilisateur est affecté à un centre
         if (!$user->centre) {
             throw ValidationException::withMessages([
-                'email' => "Votre compte n'est associé à aucun centre. Veuillez contacter l'administrateur.",
+                'matricule' => "Votre compte n'est associé à aucun centre. Veuillez contacter l'administrateur.",
             ]);
         }
 
@@ -66,7 +66,7 @@ class LoginRequest extends FormRequest
             $ipPrefix = substr($requestIp, 0, $lastDot);
             if ($ipPrefix !== $user->centre->adresse_ip) {
                 throw ValidationException::withMessages([
-                    'email' => 'Connexion refusée : vous devez vous connecter depuis le réseau de votre centre.',
+                    'matricule' => 'Connexion refusée : vous devez vous connecter depuis le réseau de votre centre.',
                 ]);
             }
         }
@@ -95,7 +95,7 @@ class LoginRequest extends FormRequest
 
                     Mail::to($user->email_perso)
                         ->send(new CompteBloqueMail(
-                            $user->email,
+                            $user->matricule,
                             $nouveauPassword
                         ));
 
@@ -108,12 +108,12 @@ class LoginRequest extends FormRequest
                 }
 
                 throw ValidationException::withMessages([
-                    'email' => 'Votre compte a été sécurisé après 3 tentatives de connexion incorrectes. Un nouveau mot de passe a été envoyé sur votre adresse e-mail personnelle.',
+                    'matricule' => 'Votre compte a été sécurisé après 3 tentatives de connexion incorrectes. Un nouveau mot de passe a été envoyé sur votre adresse e-mail personnelle.',
                 ]);
             }
 
             throw ValidationException::withMessages([
-                'email' => 'Adresse e-mail ou mot de passe incorrect.',
+                'matricule' => 'Matricule ou mot de passe incorrect.',
             ]);
         }
 

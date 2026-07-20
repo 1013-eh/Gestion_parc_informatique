@@ -28,28 +28,29 @@ class PasswordResetLinkController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'email' => ['required', 'email'],
+            'matricule' => ['required', 'string', 'exists:users,matricule'],
         ]);
 
         // Vérifie que l'utilisateur existe
-        $user = User::where('email', $request->email)->first();
+        $user = User::where('matricule', $request->matricule)->first();
 
         if (!$user) {
             throw ValidationException::withMessages([
-                'email' => ['Aucun utilisateur n\'est associé à cette adresse e-mail.'],
+                'matricule' => ['Aucun utilisateur n\'est associé à ce matricule.'],
             ]);
         }
 
-        // Génère le lien de réinitialisation
+        // Génère le lien de réinitialisation (envoyé automatiquement
+        // à email_perso via getEmailForPasswordReset() sur le modèle User)
         $status = Password::sendResetLink([
-            'email' => $user->email,
+            'matricule' => $user->matricule,
         ]);
 
         return $status === Password::RESET_LINK_SENT
             ? back()->with('status', 'Le lien de réinitialisation a été envoyé à votre adresse e-mail personnelle.')
-            : back()->withInput($request->only('email'))
+            : back()->withInput($request->only('matricule'))
                 ->withErrors([
-                    'email' => __($status),
+                    'matricule' => __($status),
                 ]);
     }
 }

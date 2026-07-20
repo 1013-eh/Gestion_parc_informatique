@@ -12,7 +12,7 @@
 
 <p>Votre compte a été créé avec succès.</p>
 
-<p><strong>Email professionnel :</strong> {{ $email }}</p>
+<p><strong>Matricule :</strong> {{ $matricule }}</p>
 
 <p><strong>Mot de passe temporaire :</strong> {{ $password }}</p>
 
