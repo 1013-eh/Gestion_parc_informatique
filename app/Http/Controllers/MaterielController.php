@@ -107,7 +107,11 @@ class MaterielController extends Controller
         $materiels = $query->paginate(25);
         $centres = Centre::all();
         $sousFamilles = SousFamille::all();
-        $nbrMateriels=Materiel::all()->count();
+        $nbrQuery = Materiel::where('etat', '!=', 'ARCHIVE');
+        if (!$user->canViewAllCentres()) {
+            $nbrQuery->where('code_bureau', $user->centre->code_bureau);
+        }
+        $nbrMateriels = $nbrQuery->count();
 
         return view('materiels/materiels', compact('materiels', 'centres', 'sousFamilles', 'nbrMateriels'));
     }
