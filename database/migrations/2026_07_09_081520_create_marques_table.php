@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('marques', function (Blueprint $table) {
             $table->increments('id_marque')->primary();
-            $table->string('nom_marque', 50)->unique();
+            $table->string('nom_marque', 50);
             $table->unsignedInteger('id_sous_famille');
              $table->foreign('id_sous_famille')
                   ->references('id_sous_famille')
