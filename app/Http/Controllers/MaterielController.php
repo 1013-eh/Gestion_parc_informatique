@@ -107,8 +107,9 @@ class MaterielController extends Controller
         $materiels = $query->paginate(25);
         $centres = Centre::all();
         $sousFamilles = SousFamille::all();
+        $nbrMateriels=Materiel::all()->count();
 
-        return view('materiels/materiels', compact('materiels', 'centres', 'sousFamilles'));
+        return view('materiels/materiels', compact('materiels', 'centres', 'sousFamilles', 'nbrMateriels'));
     }
 
     public function create()
