@@ -42,7 +42,11 @@
                             Fichier Excel (.xlsx, .xls, .csv)
                         </label>
                         <input type="file" name="file" id="file" accept=".xlsx,.xls,.csv" required
+                               onchange="afficherNomFichier(this)"
                                class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                        <div id="file-selected-message" class="mt-3 p-4 bg-green-100 text-green-800 rounded hidden">
+                            Le fichier <strong id="file-selected-name"></strong> est sélectionné, vous devez cliquer sur "Importer".
+                        </div>
                         @error('file')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
@@ -82,4 +86,18 @@
             </div>
         </div>
     </div>
+
+    <script>
+        function afficherNomFichier(input) {
+            const message = document.getElementById('file-selected-message');
+            const nameSpan = document.getElementById('file-selected-name');
+
+            if (input.files && input.files.length > 0) {
+                nameSpan.textContent = input.files[0].name;
+                message.classList.remove('hidden');
+            } else {
+                message.classList.add('hidden');
+            }
+        }
+    </script>
 </x-app-layout>

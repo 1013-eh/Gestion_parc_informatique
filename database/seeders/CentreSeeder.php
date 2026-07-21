@@ -14,7 +14,7 @@ class CentreSeeder extends Seeder
             'nom_centre' => 'MARRAKECH CTD',
             'id_region' => 1,
             'matricule' => 1,
-            'adresse_ip' => '172.27.17',
+            'adresse_ip' => '127.0.0',
             'dernier_num_ordre' => 0,
             'type_consultation' => 'ADMIN',
         ]);
