@@ -75,7 +75,6 @@
                     <table class="min-w-full divide-y divide-gray-200 divide-x divide-gray-200">
                         <thead class="bg-blue-800">
                             <tr class="divide-x divide-blue-700">
-                                <th class="px-6 py-3 text-center text-xs font-semibold text-white uppercase tracking-wider" style="width:60px">#</th>
                                 <th class="px-6 py-3 text-left text-xs font-semibold text-white uppercase tracking-wider">Code</th>
                                 <th class="px-6 py-3 text-left text-xs font-semibold text-white uppercase tracking-wider">Nom du centre</th>
                                 <th class="px-6 py-3 text-left text-xs font-semibold text-white uppercase tracking-wider">Région</th>
@@ -89,7 +88,6 @@
                         <tbody class="divide-y divide-gray-200">
                             @forelse($centres as $centre)
                             <tr class="{{ $loop->even ? 'bg-gray-50' : 'bg-white' }} hover:bg-blue-50 transition-colors divide-x divide-gray-200">
-                                <td class="px-6 py-4 text-center text-sm text-gray-500">{{ $loop->iteration }}</td>
                                 <td class="px-6 py-4 text-sm font-medium text-gray-900">
                                     <strong class="text-blue-800">{{ $centre->code_bureau }}</strong>
                                 </td>
