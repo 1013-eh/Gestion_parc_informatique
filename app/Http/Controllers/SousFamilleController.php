@@ -42,7 +42,7 @@ class SousFamilleController extends Controller
             'id_famille' => $request->id_famille,
         ]);
 
-        return redirect()->route('admin.sous_familles.index')->with('success', 'Sous famille cree avec succes.');
+        return redirect()->route('admin.familles.index')->with('success', 'Sous famille cree avec succes.');
     }
 
     /**
