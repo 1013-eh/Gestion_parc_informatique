@@ -34,7 +34,7 @@ class MarqueController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nom_marque' => 'required|unique:marques|max:50',
+            'nom_marque' => 'required|max:50',
             'id_sous_famille' => 'required|exists:sous_familles,id_sous_famille',
         ]);
 
