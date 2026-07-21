@@ -13,7 +13,6 @@ return new class extends Migration
             $table->integer('matricule')->primary();
             $table->string('nom',30);
             $table->string('prenom',40);
-            $table->string('email',100)->unique();
             $table->string('tel',20)->nullable();
             $table->string('password');
             $table->string('email_perso',50)->unique();
