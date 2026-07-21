@@ -3,7 +3,7 @@
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Matériels') }}
             <span class="ml-2 px-2 py-1 text-sm bg-green-100 text-green-800 rounded-full">
-                {{ $materiels->count() }}
+                {{ $nbrMateriels}}
             </span>
         </h2>
     </x-slot>
