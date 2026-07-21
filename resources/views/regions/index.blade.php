@@ -35,7 +35,6 @@
                     <table class="min-w-full divide-y divide-gray-200 divide-x divide-gray-200">
                         <thead class="bg-blue-800">
                             <tr class="divide-x divide-blue-700">
-                                <th class="px-6 py-3 text-center text-xs font-semibold text-white uppercase tracking-wider">#</th>
                                 <th class="px-6 py-3 text-left text-xs font-semibold text-white uppercase tracking-wider">Libellé</th>
                                 <th class="px-6 py-3 text-center text-xs font-semibold text-white uppercase tracking-wider">Abréviation</th>
                                 <th class="px-6 py-3 text-center text-xs font-semibold text-white uppercase tracking-wider">Centres</th>
@@ -45,7 +44,6 @@
                         <tbody class="divide-y divide-gray-200">
                             @forelse($regions as $region)
                             <tr class="{{ $loop->even ? 'bg-gray-50' : 'bg-white' }} hover:bg-blue-50 transition-colors divide-x divide-gray-200">
-                                <td class="px-6 py-4 text-center text-sm text-gray-500">{{ $loop->iteration }}</td>
                                 <td class="px-6 py-4 text-sm font-medium text-gray-900">{{ $region->libelle_region }}</td>
                                 <td class="px-6 py-4 text-center text-sm">
                                     <span class="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">{{ $region->abreviation }}</span>
