@@ -27,7 +27,9 @@ class UserController extends Controller
                 ->orWhere('email_perso', 'like', "%{$search}%");
         })->paginate(10);
 
-        return view('users.index', compact('users', 'search'));
+        $nbrUsers=User::all()->count();
+
+        return view('users.index', compact('users', 'search', 'nbrUsers'));
     }
     /**
      * Show the form for creating a new resource.
