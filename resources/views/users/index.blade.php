@@ -49,7 +49,7 @@
                         <td class="py-3 px-4">{{ $user->matricule }}</td>
                         <td class="py-3 px-4">{{ $user->nom }}</td>
                         <td class="py-3 px-4">{{ $user->prenom }}</td>
-                        <td class="py-3 px-4">{{ $user->email }}</td>
+                        <td class="py-3 px-4">{{ $user->email_perso }}</td>
                         <td class="py-3 px-4">{{ $user->tel }}</td>
                         <td class="py-3 px-4">
                             @if($user->etat == 'ACTIVE')
