@@ -11,15 +11,6 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         User::create([
-            'matricule' => 1,
-            'nom' => 'Admin',
-            'prenom' => 'System',
-            'email_perso' => 'admin.perso@parc.com',
-            'password' => Hash::make('password'),
-            'etat' => 'ACTIVE',
-        ]);
-
-        User::create([
             'matricule' => '11111111',
             'nom' => 'MOURAD',
             'prenom' => 'BOUJANI',
