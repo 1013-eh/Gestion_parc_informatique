@@ -24,7 +24,7 @@ class UserController extends Controller
             $query->where('matricule', 'like', "%{$search}%")
                 ->orWhere('nom', 'like', "%{$search}%")
                 ->orWhere('prenom', 'like', "%{$search}%")
-                ->orWhere('email', 'like', "%{$search}%");
+                ->orWhere('email_perso', 'like', "%{$search}%");
         })->paginate(10);
 
         return view('users.index', compact('users', 'search'));
@@ -50,16 +50,12 @@ class UserController extends Controller
             'etat' => 'required|in:ACTIVE,RETRAITE',
         ]);
 
-        $email = strtolower(
-            $request->prenom . '.' . str_replace(' ', '', $request->nom)
-        ) . '@barid.ma';
-        $password = Str::random(10);
+       $password = Str::random(10);
         User::create([
             'matricule'   => $request->matricule,
             'nom'         => $request->nom,
             'prenom'      => $request->prenom,
-            'email'       => $email,                 // Généré automatiquement
-            'email_perso' => $request->email_perso,  // Saisi par l'utilisateur
+            'email_perso' => $request->email_perso,
             'password'    => Hash::make($password),
             'tel'         => $request->tel,
             'etat'        => $request->etat,
@@ -100,36 +96,14 @@ class UserController extends Controller
             'etat' => 'required|in:ACTIVE,RETRAITE',
         ]);
 
-        // Générer le nouvel email professionnel
-        $nouvelEmail = strtolower(
-            $request->prenom . '.' . str_replace(' ', '', $request->nom)
-        ) . '@barid.ma';
-
-        // Vérifier si l'email professionnel change
-        $emailModifie = $user->email !== $nouvelEmail;
-
-        $ancienEmail = $user->email;
-
-        // Mise à jour
         $user->update([
             'matricule'   => $request->matricule,
             'nom'         => $request->nom,
             'prenom'      => $request->prenom,
-            'email'       => $nouvelEmail,
             'email_perso' => $request->email_perso,
             'tel'         => $request->tel,
             'etat'        => $request->etat,
         ]);
-
-        // Envoyer un mail uniquement si l'adresse a changé
-        if ($emailModifie) {
-            Mail::to($request->email_perso)
-                ->send(new ModificationEmailMail(
-                    $user,
-                    $ancienEmail,
-                    $nouvelEmail
-                ));
-        }
 
         return redirect()->route('users.index')
             ->with('success', 'Utilisateur modifié avec succès.');
