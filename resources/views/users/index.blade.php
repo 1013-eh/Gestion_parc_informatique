@@ -4,7 +4,7 @@
             <h2 class="font-semibold text-xl text-gray-800">
             {{ __('Gestion des utilisateurs') }}
                 <span class="ml-2 px-2 py-1 text-sm bg-green-100 text-green-800 rounded-full">
-                    {{ $users->count() }}
+                    {{ $nbrUsers }}
                 </span>    
             </h2>
             <a href="{{ route('users.create') }}"
