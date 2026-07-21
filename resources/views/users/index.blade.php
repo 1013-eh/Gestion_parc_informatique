@@ -1,7 +1,12 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-xl text-gray-800">Gestion des utilisateurs</h2>
+            <h2 class="font-semibold text-xl text-gray-800">
+            {{ __('Gestion des utilisateurs') }}
+                <span class="ml-2 px-2 py-1 text-sm bg-green-100 text-green-800 rounded-full">
+                    {{ $users->count() }}
+                </span>    
+            </h2>
             <a href="{{ route('users.create') }}"
                 class="bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded">
                 + Ajouter un utilisateur
