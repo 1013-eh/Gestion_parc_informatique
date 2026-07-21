@@ -15,7 +15,7 @@ return new class extends Migration
             $table->increments('id_marque')->primary();
             $table->string('nom_marque', 50);
             $table->unsignedInteger('id_sous_famille');
-             $table->foreign('id_sous_famille')
+            $table->foreign('id_sous_famille')
                   ->references('id_sous_famille')
                   ->on('sous_familles')
                   ->cascadeOnUpdate()
