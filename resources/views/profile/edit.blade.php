@@ -68,7 +68,7 @@
                             </div>
                             <div>
                                 <dt class="text-xs font-medium text-gray-700 uppercase tracking-wide">Email</dt>
-                                <dd class="text-sm font-medium text-gray-900 mt-0.5 break-all">{{ $user->email }}</dd>
+                                <dd class="text-sm font-medium text-gray-900 mt-0.5 break-all">{{ $user->email_perso }}</dd>
                             </div>
                         </div>
 
