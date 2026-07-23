@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Materiel;
 use Illuminate\Database\Seeder;
 
 class MaterielSeeder extends Seeder
