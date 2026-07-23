@@ -63,7 +63,7 @@
                             <option value="HORS_USAGE" {{ request('etat') == 'HORS_USAGE' ? 'selected' : '' }}>HORS USAGE</option>
                         </select>
                     </div>
-                    @if(auth()->user()->isAdmin())
+                    @if(auth()->user()->canViewAllCentres())
                         <div>
                             <select name="code_bureau" class="w-full border-gray-300 rounded-md text-sm" onchange="this.form.submit()">
                                 <option value="">Tous les centres</option>
