@@ -35,7 +35,8 @@ class MaterielController extends Controller
                   ->orWhere('cab', 'like', "%{$search}%")
                   ->orWhere('num_marche', 'like', "%{$search}%")
                   ->orWhere('num_ordre', 'like', "%{$search}%")
-                  ->orWhere('machine', 'like', "%{$search}%")
+                  ->orWhere('code_bureau', 'like', "%{$search}%")
+                  # ->orWhere('machine', 'like', "%{$search}%")
                   ->orWhereHas('centre', fn($q) => $q->where('nom_centre', 'like', "%{$search}%"))
                   ->orWhereHas('modele', fn($q) => $q->where('nom_modele', 'like', "%{$search}%"))
                   ->orWhereHas('modele.marque', fn($q) => $q->where('nom_marque', 'like', "%{$search}%"))
@@ -104,7 +105,7 @@ class MaterielController extends Controller
             $query->orderBy('materiels.date_affectation', 'desc');
         }
 
-        $materiels = $query->paginate(25);
+        $materiels = $query->paginate(20);
         $centres = Centre::all();
         $sousFamilles = SousFamille::all();
         $nbrQuery = Materiel::where('etat', '!=', 'ARCHIVE');
