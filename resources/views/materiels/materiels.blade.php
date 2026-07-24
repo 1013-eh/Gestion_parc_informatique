@@ -63,16 +63,18 @@
                             <option value="HORS_USAGE" {{ request('etat') == 'HORS_USAGE' ? 'selected' : '' }}>HORS USAGE</option>
                         </select>
                     </div>
-                    <div>
-                        <select name="code_bureau" class="w-full border-gray-300 rounded-md text-sm" onchange="this.form.submit()">
-                            <option value="">Tous les centres</option>
-                            @foreach($centres as $c)
-                                <option value="{{ $c->code_bureau }}" {{ request('code_bureau') == $c->code_bureau ? 'selected' : '' }}>
-                                    {{ $c->nom_centre }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
+                    @if(auth()->user()->canViewAllCentres())
+                        <div>
+                            <select name="code_bureau" class="w-full border-gray-300 rounded-md text-sm" onchange="this.form.submit()">
+                                <option value="">Tous les centres</option>
+                                @foreach($centres as $c)
+                                    <option value="{{ $c->code_bureau }}" {{ request('code_bureau') == $c->code_bureau ? 'selected' : '' }}>
+                                        {{ $c->nom_centre }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    @endif
                     <div>
                         <select name="sous_famille" class="w-full border-gray-300 rounded-md text-sm" onchange="this.form.submit()">
                             <option value="">Toutes les sous-familles</option>
