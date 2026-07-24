@@ -105,7 +105,7 @@ class MaterielController extends Controller
             $query->orderBy('materiels.date_affectation', 'desc');
         }
 
-        $materiels = $query->paginate(20);
+        $materiels = $query->paginate(20)->appends(request()->query());
         $centres = Centre::all();
         $sousFamilles = SousFamille::all();
         $nbrQuery = Materiel::where('etat', '!=', 'ARCHIVE');
