@@ -26,7 +26,6 @@ class User extends Authenticatable
         'matricule',
         'nom',
         'prenom',
-        'email',
         'email_perso',
         'tel',
         'password',
@@ -100,5 +99,8 @@ class User extends Authenticatable
     {
         return "{$this->nom} {$this->prenom}";
     }
-
+    public function getEmailForPasswordReset(): string
+    {
+        return $this->email_perso;
+    }
 }
