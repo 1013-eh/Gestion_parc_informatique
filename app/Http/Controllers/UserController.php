@@ -44,7 +44,7 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'matricule' => 'required|digits:8|unique:users',
+            'matricule' => 'required|digits:6|unique:users',
             'nom' => 'required',
             'prenom' => 'required',
             'email_perso' => 'required|email|unique:users',
@@ -90,7 +90,7 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         $request->validate([
-            'matricule' => 'required|digits:8|unique:users,matricule,' . $user->matricule . ',matricule',
+            'matricule' => 'required|digits:6|unique:users,matricule,' . $user->matricule . ',matricule',
             'nom' => 'required|string|max:255',
             'prenom' => 'required|string|max:255',
             'email_perso' => 'required|email|unique:users,email_perso,' . $user->matricule . ',matricule',
