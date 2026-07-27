@@ -15,23 +15,6 @@
 
             <div class="mb-4">
                 <label class="block text-gray-700 font-semibold mb-2">
-                    Nom de la sous famille
-                </label>
-
-                <input
-                    type="text"
-                    name="nom_sous_famille"
-                    value="{{ old('nom_sous_famille', $sousFamille->nom_sous_famille) }}"
-                    placeholder="Nom de la sous famille"
-                    class="w-full border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-
-                @error('nom_sous_famille')
-                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <div class="mb-4">
-                <label class="block text-gray-700 font-semibold mb-2">
                     Famille
                 </label>
 
@@ -51,6 +34,23 @@
                 </select>
 
                 @error('id_famille')
+                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-gray-700 font-semibold mb-2">
+                    Nom de la sous famille
+                </label>
+
+                <input
+                    type="text"
+                    name="nom_sous_famille"
+                    value="{{ old('nom_sous_famille', $sousFamille->nom_sous_famille) }}"
+                    placeholder="Nom de la sous famille"
+                    class="w-full border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+
+                @error('nom_sous_famille')
                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                 @enderror
             </div>
