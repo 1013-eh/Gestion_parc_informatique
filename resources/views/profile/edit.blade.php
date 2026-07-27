@@ -16,7 +16,7 @@
             <div class="bg-white shadow sm:rounded-lg overflow-hidden">
 
                 {{-- Header band with avatar --}}
-                <div class="bg-gradient-to-r from-blue-900 to-blue-800 px-6 py-8 sm:px-8">
+                <div class="bg-gradient-to-r from-yellow-600 to-yellow-200 px-6 py-8 sm:px-8">
                     <div class="flex items-center gap-4">
                         <div class="flex-shrink-0 h-16 w-16 rounded-full bg-white/10 border-2 border-white/30 flex items-center justify-center">
                             <span class="text-xl font-semibold text-white tracking-wide">{{ $initials }}</span>
@@ -25,7 +25,7 @@
                             <h3 class="text-xl font-semibold text-white">
                                 {{ $user->prenom }} {{ $user->nom }}
                             </h3>
-                            <p class="text-blue-200 text-sm mt-0.5">
+                            <p class="text-white text-sm mt-0.5">
                                 {{ $user->centre->nom_centre ?? 'Centre non défini' }}
                             </p>
                         </div>
