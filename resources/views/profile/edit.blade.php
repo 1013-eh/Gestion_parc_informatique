@@ -80,7 +80,7 @@
                             </div>
                             <div>
                                 <dt class="text-xs font-medium text-gray-700 uppercase tracking-wide">GSM</dt>
-                                <dd class="text-sm font-medium text-gray-900 mt-0.5">{{ $user->gsm }}</dd>
+                                <dd class="text-sm font-medium text-gray-900 mt-0.5">{{ $user->tel }}</dd>
                             </div>
                         </div>
 
