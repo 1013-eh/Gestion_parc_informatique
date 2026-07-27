@@ -214,7 +214,7 @@ class MaterielController extends Controller
     {
         $this->authorize('modify', $materiel);
         $validated = $request->validate([
-            'num_serie'       => 'required|string|max:15|unique:materiels,num_serie,' . $materiel->num_serie . ',num_serie|regex:/^SN [A-Z0-9]{8,}$/',
+            'num_serie'       => 'required|string|unique:materiels,num_serie,' . $materiel->num_serie . ',num_serie|regex:/^SN [A-Z0-9]{6,}$/',
             'id_modele'       => 'required|integer|exists:modeles,id_modele',
             'code_bureau'     => 'required|integer|exists:centres,code_bureau',
             'date_affectation'=> 'required|date|before_or_equal:today',

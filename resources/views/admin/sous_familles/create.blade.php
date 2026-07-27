@@ -6,13 +6,6 @@
         <form method="POST" action="{{ route('admin.sous_familles.store') }}" class="bg-white shadow rounded-lg p-6">
             @csrf
             <div class="mb-4">
-                <label for="" class="block text-gray-700 font-semibold mb-2">Nom de la sous Famille</label>
-                <input type="text" name="nom_sous_famille" placeholder="Nom de la sous famille" class="w-full border border-gray-300 rounded px-3 py-2">
-                @error('nom_sous_famille')
-                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                @enderror
-            </div>
-            <div class="mb-4">
                 <label class="block text-gray-700 font-semibold mb-2">Famille</label>
                 <select name="id_famille" class="w-full border border-gray-300 rounded px-3 py-2">
                     <option value="">-- Choisir une famille --</option>
@@ -23,6 +16,13 @@
                     @endforeach
                 </select>
                 @error('id_famille')
+                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+            <div class="mb-4">
+                <label for="" class="block text-gray-700 font-semibold mb-2">Nom de la sous Famille</label>
+                <input type="text" name="nom_sous_famille" placeholder="Nom de la sous famille" class="w-full border border-gray-300 rounded px-3 py-2">
+                @error('nom_sous_famille')
                 <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                 @enderror
             </div>
