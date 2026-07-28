@@ -21,10 +21,13 @@
                         </div>
                     @endif
 
-                    <form action="{{ route('centres.store') }}" method="POST">
+                    <form id="centreForm" action="{{ route('centres.store') }}" method="POST">
                         @csrf
 
+                        <input type="hidden" name="force_create" id="force_create" value="0">
+
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
                             <div class="mb-4">
                                 <label for="code_bureau" class="block text-sm font-medium text-gray-700 mb-1">
                                     Code bureau <span class="text-red-600">*</span>
@@ -130,6 +133,7 @@
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
+
                         </div>
 
                         <div class="flex justify-between mt-4">
@@ -137,14 +141,39 @@
                                class="inline-flex items-center px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 text-sm font-medium rounded transition-colors">
                                 Annuler
                             </a>
+
                             <button type="submit"
                                     class="inline-flex items-center px-4 py-2 bg-blue-900 hover:bg-blue-800 text-white text-sm font-medium rounded transition-colors">
                                 Créer le centre
                             </button>
                         </div>
+
                     </form>
+
                 </div>
             </div>
         </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    @if(session('ip_existante'))
+    <script>
+        Swal.fire({
+            title: 'Adresse IP déjà utilisée',
+            text: 'Cette adresse IP est déjà affectée à un autre centre. Voulez-vous continuer ?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Valider',
+            cancelButtonText: 'Annuler',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('force_create').value = 1;
+                document.getElementById('centreForm').submit();
+            }
+        });
+    </script>
+    @endif
+
 </x-app-layout>

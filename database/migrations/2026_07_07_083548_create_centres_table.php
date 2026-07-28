@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('nom_centre', 100)->unique();
             $table->unsignedInteger('id_region');
             $table->integer('matricule');
-            $table->string('adresse_ip', 45)->unique();
+            $table->string('adresse_ip', 45);
             $table->string('dernier_num_ordre')->nullable();
             $table->enum('type_consultation', [
                 'GLOBAL',

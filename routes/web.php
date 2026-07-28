@@ -97,4 +97,7 @@ Route::get('sous_familles/{id}/marques', function ($id) {
     );
 })->name('admin.sous_familles.marques');
 
+Route::post('/centres/check-ip', [CentreController::class, 'checkIp'])
+    ->name('centres.checkIp');
+
 require __DIR__ . '/auth.php';
