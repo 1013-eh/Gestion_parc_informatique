@@ -2,6 +2,9 @@
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Liste des archives') }}
+            <span class="ml-2 px-2 py-1 text-sm bg-green-100 text-green-800 rounded-full">
+                {{ $archives->count() }}
+            </span>
         </h2>
     </x-slot>
 

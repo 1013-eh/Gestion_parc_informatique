@@ -9,7 +9,7 @@ class RegionSeeder extends Seeder
 {
     public function run(): void
     {
-        Region::create(['libelle_region' => 'Marrakech', 'abreviation' => 'MRK']);
+        Region::create(['libelle_region' => 'Marrakech', 'abreviation' => 'MKH']);
         Region::create(['libelle_region' => 'Agadir', 'abreviation' => 'AGR']);
     }
 }

@@ -2,6 +2,9 @@
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Matériels') }}
+            <span class="ml-2 px-2 py-1 text-sm bg-green-100 text-green-800 rounded-full">
+                {{ $nbrMateriels}}
+            </span>
         </h2>
     </x-slot>
 
@@ -60,16 +63,18 @@
                             <option value="HORS_USAGE" {{ request('etat') == 'HORS_USAGE' ? 'selected' : '' }}>HORS USAGE</option>
                         </select>
                     </div>
-                    <div>
-                        <select name="code_bureau" class="w-full border-gray-300 rounded-md text-sm" onchange="this.form.submit()">
-                            <option value="">Tous les centres</option>
-                            @foreach($centres as $c)
-                                <option value="{{ $c->code_bureau }}" {{ request('code_bureau') == $c->code_bureau ? 'selected' : '' }}>
-                                    {{ $c->nom_centre }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
+                    @if(auth()->user()->canViewAllCentres())
+                        <div>
+                            <select name="code_bureau" class="w-full border-gray-300 rounded-md text-sm" onchange="this.form.submit()">
+                                <option value="">Tous les centres</option>
+                                @foreach($centres as $c)
+                                    <option value="{{ $c->code_bureau }}" {{ request('code_bureau') == $c->code_bureau ? 'selected' : '' }}>
+                                        {{ $c->nom_centre }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    @endif
                     <div>
                         <select name="sous_famille" class="w-full border-gray-300 rounded-md text-sm" onchange="this.form.submit()">
                             <option value="">Toutes les sous-familles</option>

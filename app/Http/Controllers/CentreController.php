@@ -32,6 +32,8 @@ class CentreController extends Controller
         }
 
         $centres = $query->orderBy('code_bureau')->paginate(10);
+        
+        $nbrCentres = Centre::all()->count();
 
         $regions = Region::orderBy('libelle_region')->get();
 
@@ -39,7 +41,7 @@ class CentreController extends Controller
 
         $isAdmin = $monCentre && $monCentre->type_consultation === 'ADMIN';
 
-        return view('centres.index', compact('centres', 'regions', 'isAdmin'));
+        return view('centres.index', compact('centres', 'regions', 'isAdmin', 'nbrCentres'));
     }
 
     public function create()

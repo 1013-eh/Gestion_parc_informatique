@@ -35,7 +35,8 @@ class MaterielController extends Controller
                   ->orWhere('cab', 'like', "%{$search}%")
                   ->orWhere('num_marche', 'like', "%{$search}%")
                   ->orWhere('num_ordre', 'like', "%{$search}%")
-                  ->orWhere('machine', 'like', "%{$search}%")
+                  ->orWhere('code_bureau', 'like', "%{$search}%")
+                  # ->orWhere('machine', 'like', "%{$search}%")
                   ->orWhereHas('centre', fn($q) => $q->where('nom_centre', 'like', "%{$search}%"))
                   ->orWhereHas('modele', fn($q) => $q->where('nom_modele', 'like', "%{$search}%"))
                   ->orWhereHas('modele.marque', fn($q) => $q->where('nom_marque', 'like', "%{$search}%"))
@@ -104,11 +105,16 @@ class MaterielController extends Controller
             $query->orderBy('materiels.date_affectation', 'desc');
         }
 
-        $materiels = $query->paginate(25);
+        $materiels = $query->paginate(20)->appends(request()->query());
         $centres = Centre::all();
         $sousFamilles = SousFamille::all();
+        $nbrQuery = Materiel::where('etat', '!=', 'ARCHIVE');
+        if (!$user->canViewAllCentres()) {
+            $nbrQuery->where('code_bureau', $user->centre->code_bureau);
+        }
+        $nbrMateriels = $nbrQuery->count();
 
-        return view('materiels/materiels', compact('materiels', 'centres', 'sousFamilles'));
+        return view('materiels/materiels', compact('materiels', 'centres', 'sousFamilles', 'nbrMateriels'));
     }
 
     public function create()
@@ -123,7 +129,7 @@ class MaterielController extends Controller
     {
         $this->authorize('modify', Materiel::class);
         $validated = $request->validate([
-            'num_serie'       => 'required|string|max:15|unique:materiels,num_serie|regex:/^SN [A-Z0-9]{8,}$/',
+            'num_serie'       => 'required|string|unique:materiels,num_serie|regex:/^SN [A-Z0-9]{6,}$/',
             'id_modele'       => 'required|integer|exists:modeles,id_modele',
             'code_bureau'     => 'required|integer|exists:centres,code_bureau',
             'date_affectation'=> 'required|date|before_or_equal:today',
@@ -208,7 +214,7 @@ class MaterielController extends Controller
     {
         $this->authorize('modify', $materiel);
         $validated = $request->validate([
-            'num_serie'       => 'required|string|max:15|unique:materiels,num_serie,' . $materiel->num_serie . ',num_serie|regex:/^SN [A-Z0-9]{8,}$/',
+            'num_serie'       => 'required|string|unique:materiels,num_serie,' . $materiel->num_serie . ',num_serie|regex:/^SN [A-Z0-9]{6,}$/',
             'id_modele'       => 'required|integer|exists:modeles,id_modele',
             'code_bureau'     => 'required|integer|exists:centres,code_bureau',
             'date_affectation'=> 'required|date|before_or_equal:today',

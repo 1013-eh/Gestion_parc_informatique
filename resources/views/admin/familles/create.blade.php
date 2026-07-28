@@ -10,6 +10,10 @@
                 <input type="text" name="nom_famille" placeholder="Nom de la famille" class="w-full border border-gray-300 rounded px-3 py-2">
             </div>
             <button type="submit" class="bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-6 rounded">Créer</button>
+            <a href="{{ route('admin.familles.index') }}"
+                    class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-6 rounded">
+                    Annuler
+                </a>
         </form>
     </div>
 </x-app-layout>
