@@ -14,9 +14,11 @@
                     <label class="block text-gray-700 font-semibold mb-2">Matricule</label>
                     <input type="text" name="matricule"
                         class="w-full border border-gray-300 rounded px-3 py-2"
-                        maxlength="8" pattern="[0-9]{8}"
+                        minlength="6"
+                        pattern="[0-9]{6,}"
                         oninput="this.value=this.value.replace(/[^0-9]/g,'')"
-                        value="{{ old('matricule', $user->matricule) }}" required>
+                        value="{{ old('matricule', $user->matricule) }}"
+                        required>
                 </div>
 
                 <div class="mb-4">
