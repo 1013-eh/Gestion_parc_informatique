@@ -33,17 +33,17 @@
                 <div class="mb-4 flex gap-2">
                     @if(auth()->user()->isAdmin())
                         <a href="{{ route('materiels.create') }}"
-                        class="inline-block px-4 py-2 bg-blue-900 text-white rounded hover:bg-blue-800">
+                        class="inline-block px-4 py-2 bg-yellow-500 text-blue-700 font-medium rounded hover:bg-yellow-600">
                            {{ __('Ajouter un matériel') }}
                         </a>
                     @endif
                     <a href="{{ route('materiels.export') }}"
-                    class="inline-block px-4 py-2 bg-green-600 text-white rounded hover:bg-green-500">
+                    class="inline-block px-4 py-2 bg-yellow-400 text-blue-700 font-medium rounded hover:bg-yellow-500">
                         Exporter (Excel)
                     </a>
                     @if(auth()->user()->isAdmin())
                         <a href="{{ route('materiels.import.form') }}"
-                        class="inline-block px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-500">
+                        class="inline-block px-4 py-2 bg-yellow-300 text-blue-700 font-medium rounded hover:bg-yellow-400">
                            Importer (Excel)
                         </a>
                     @endif

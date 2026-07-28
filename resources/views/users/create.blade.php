@@ -22,17 +22,17 @@
 
                 <div class="mb-4">
                     <label class="block text-gray-700 font-semibold mb-2">Matricule</label>
-                    <input type="text" name="matricule" class="w-full border border-gray-300 rounded px-3 py-2" required>
+                    <input type="text" name="matricule" value="{{ old('matricule') }}" class="w-full border border-gray-300 rounded px-3 py-2" required>
                 </div>
 
                 <div class="mb-4">
                     <label class="block text-gray-700 font-semibold mb-2">Nom</label>
-                    <input type="text" name="nom" class="w-full border border-gray-300 rounded px-3 py-2" required>
+                    <input type="text" name="nom" value="{{ old('nom') }}" class="w-full border border-gray-300 rounded px-3 py-2" required>
                 </div>
 
                 <div class="mb-4">
                     <label class="block text-gray-700 font-semibold mb-2">Prénom</label>
-                    <input type="text" name="prenom" class="w-full border border-gray-300 rounded px-3 py-2" required>
+                    <input type="text" name="prenom" value="{{ old('prenom') }}" class="w-full border border-gray-300 rounded px-3 py-2" required>
                 </div>
 
                 <div class="mb-4">
@@ -42,14 +42,14 @@
 
                 <div class="mb-4">
                     <label class="block text-gray-700 font-semibold mb-2">Téléphone</label>
-                    <input type="text" name="tel" class="w-full border border-gray-300 rounded px-3 py-2" required>
+                    <input type="text" name="tel" value="{{ old('tel') }}" class="w-full border border-gray-300 rounded px-3 py-2" required>
                 </div>
 
                 <div class="mb-4">
                     <label class="block text-gray-700 font-semibold mb-2">État</label>
                     <select name="etat" class="w-full border border-gray-300 rounded px-3 py-2">
-                        <option value="ACTIVE">ACTIVE</option>
-                        <option value="RETRAITE">RETRAITE</option>
+                        <option value="ACTIVE" {{ old('etat') == 'ACTIVE' ? 'selected' : '' }}>ACTIVE</option>
+                        <option value="RETRAITE" {{ old('etat') == 'RETRAITE' ? 'selected' : '' }}>RETRAITE</option>
                     </select>
                 </div>
 
