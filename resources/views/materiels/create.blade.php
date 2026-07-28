@@ -14,9 +14,24 @@
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             {{-- N° Série --}}
-                            <div>
+                            <div x-data="{
+                                value: '{{ old('num_serie') }}',
+                                get isValid() {
+                                    return /^SN [A-Z0-9]{6,}$/.test(this.value);
+                                }
+                            }">
                                 <x-input-label for="num_serie" :value="__('N° Série')" />
-                                <x-text-input id="num_serie" class="block mt-1 w-full" type="text" name="num_serie" :value="old('num_serie')" required />
+                                <input
+                                    type="text"
+                                    id="num_serie"
+                                    name="num_serie"
+                                    x-model="value"
+                                    class="block mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                    :class="value.length > 0 ? (isValid ? 'border-green-500' : 'border-red-500') : ''"                                    required
+                                >
+                                <p x-show="value.length > 0" class="mt-1 text-sm" :class="isValid ? 'text-green-600' : 'text-red-600'">                                    <span x-show="isValid">Format valide</span>
+                                    <span x-show="!isValid">Format attendu : "SN" suivi d'un espace puis au moins 6 caractères alphanumériques(ex: SN A1B2C3)</span>
+                                </p>
                                 <x-input-error :messages="$errors->get('num_serie')" class="mt-2" />
                             </div>
 

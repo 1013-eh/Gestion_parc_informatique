@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Centre;
 use App\Models\Region;
 use App\Models\User;
+use App\Models\HistoriqueResponsable;
 use Illuminate\Http\Request;
 
 class CentreController extends Controller
@@ -159,6 +160,15 @@ class CentreController extends Controller
             return back()
                 ->withInput()
                 ->with('ip_existante', true);
+        }
+
+        if ($centre->matricule != $request->matricule) {
+
+            HistoriqueResponsable::create([
+                'code_bureau'      => $centre->code_bureau,
+                'ancien_matricule' => $centre->matricule,
+                'nouveau_matricule' => $request->matricule,
+            ]);
         }
 
         $centre->update([
