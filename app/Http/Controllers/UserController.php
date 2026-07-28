@@ -27,7 +27,7 @@ class UserController extends Controller
                 ->orWhere('email_perso', 'like', "%{$search}%");
         })->paginate(10);
 
-        $nbrUsers=User::all()->count();
+        $nbrUsers = User::all()->count();
 
         return view('users.index', compact('users', 'search', 'nbrUsers'));
     }
@@ -44,7 +44,11 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'matricule' => 'required|digits:6|unique:users',
+            'matricule' => [
+                'required',
+                'regex:/^[0-9]{6,}$/',
+                'unique:users,matricule',
+            ],
             'nom' => 'required',
             'prenom' => 'required',
             'email_perso' => 'required|email|unique:users',
@@ -52,7 +56,7 @@ class UserController extends Controller
             'etat' => 'required|in:ACTIVE,RETRAITE',
         ]);
 
-       $password = Str::random(10);
+        $password = Str::random(10);
         User::create([
             'matricule'   => $request->matricule,
             'nom'         => $request->nom,
@@ -65,7 +69,7 @@ class UserController extends Controller
         ]);
         Mail::to($request->email_perso)->send(new CompteUtilisateurMail($request->matricule, $password));
         return redirect()->route('users.index')
-        ->with('success', 'Utilisateur ajouté avec succès.');
+            ->with('success', 'Utilisateur ajouté avec succès.');
     }
 
     /**
@@ -90,7 +94,11 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         $request->validate([
-            'matricule' => 'required|digits:6|unique:users,matricule,' . $user->matricule . ',matricule',
+            'matricule' => [
+                'required',
+                'regex:/^[0-9]{6,}$/',
+                'unique:users,matricule',
+            ],
             'nom' => 'required|string|max:255',
             'prenom' => 'required|string|max:255',
             'email_perso' => 'required|email|unique:users,email_perso,' . $user->matricule . ',matricule',
