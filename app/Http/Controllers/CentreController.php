@@ -26,13 +26,13 @@ class CentreController extends Controller
 
             $query->where(function ($q) use ($search) {
                 $q->where('code_bureau', 'LIKE', "%{$search}%")
-                  ->orWhere('nom_centre', 'LIKE', "%{$search}%")
-                  ->orWhere('adresse_ip', 'LIKE', "%{$search}%");
+                    ->orWhere('nom_centre', 'LIKE', "%{$search}%")
+                    ->orWhere('adresse_ip', 'LIKE', "%{$search}%");
             });
         }
 
         $centres = $query->orderBy('code_bureau')->paginate(10);
-        
+
         $nbrCentres = Centre::all()->count();
 
         $regions = Region::orderBy('libelle_region')->get();
@@ -57,6 +57,15 @@ class CentreController extends Controller
         return view('centres.create', compact('regions', 'users'));
     }
 
+    public function checkIp(Request $request)
+    {
+        $exists = Centre::where('adresse_ip', $request->adresse_ip)->exists();
+
+        return response()->json([
+            'exists' => $exists
+        ]);
+    }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -66,21 +75,31 @@ class CentreController extends Controller
             'matricule' => 'required|exists:users,matricule|unique:centres,matricule',
             'adresse_ip' => [
                 'required',
-                'unique:centres,adresse_ip',
                 'regex:/^(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)$/'
             ],
-            'type_consultation' => 'required|in:GLOBAL,PAR_CENTRE,ADMIN'
+            'type_consultation' => 'required|in:GLOBAL,PAR_CENTRE,ADMIN',
+            'force_create' => 'nullable|boolean'
         ], [
-            'adresse_ip.regex' => 'L\'adresse IP doit être au format xxx.xxx.xxx (3 blocs de 0 à 255).'
+            'adresse_ip.regex' => "L'adresse IP doit être au format xxx.xxx.xxx (3 blocs de 0 à 255)."
         ]);
 
+        // Vérifie si l'adresse IP existe déjà
+        $ipExiste = Centre::where('adresse_ip', $request->adresse_ip)->exists();
+
+        // Si elle existe et que l'utilisateur n'a pas encore confirmé
+        if ($ipExiste && !$request->boolean('force_create')) {
+            return back()
+                ->withInput()
+                ->with('ip_existante', true);
+        }
+
         Centre::create([
-            'code_bureau' => $request->code_bureau,
-            'nom_centre' => $request->nom_centre,
-            'id_region' => $request->id_region,
-            'matricule' => $request->matricule,
-            'adresse_ip' => $request->adresse_ip,
-            'type_consultation' => $request->type_consultation,
+            'code_bureau'        => $request->code_bureau,
+            'nom_centre'         => $request->nom_centre,
+            'id_region'          => $request->id_region,
+            'matricule'          => $request->matricule,
+            'adresse_ip'         => $request->adresse_ip,
+            'type_consultation'  => $request->type_consultation,
         ]);
 
         return redirect()
@@ -122,20 +141,32 @@ class CentreController extends Controller
             'matricule' => 'required|exists:users,matricule|unique:centres,matricule,' . $id . ',code_bureau',
             'adresse_ip' => [
                 'required',
-                'unique:centres,adresse_ip,' . $id . ',code_bureau',
                 'regex:/^(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)$/'
             ],
-            'type_consultation' => 'required|in:GLOBAL,PAR_CENTRE,ADMIN'
+            'type_consultation' => 'required|in:GLOBAL,PAR_CENTRE,ADMIN',
+            'force_create' => 'nullable|boolean'
         ], [
-            'adresse_ip.regex' => 'L\'adresse IP doit être au format xxx.xxx.xxx (3 blocs de 0 à 255).'
+            'adresse_ip.regex' => "L'adresse IP doit être au format xxx.xxx.xxx (3 blocs de 0 à 255)."
         ]);
 
+        // Vérifie si un autre centre possède déjà cette IP
+        $ipExiste = Centre::where('adresse_ip', $request->adresse_ip)
+            ->where('code_bureau', '!=', $centre->code_bureau)
+            ->exists();
+
+        // Si l'IP existe déjà et que l'utilisateur n'a pas confirmé
+        if ($ipExiste && !$request->boolean('force_create')) {
+            return back()
+                ->withInput()
+                ->with('ip_existante', true);
+        }
+
         $centre->update([
-            'code_bureau' => $request->code_bureau,
-            'nom_centre' => $request->nom_centre,
-            'id_region' => $request->id_region,
-            'matricule' => $request->matricule,
-            'adresse_ip' => $request->adresse_ip,
+            'code_bureau'       => $request->code_bureau,
+            'nom_centre'        => $request->nom_centre,
+            'id_region'         => $request->id_region,
+            'matricule'         => $request->matricule,
+            'adresse_ip'        => $request->adresse_ip,
             'type_consultation' => $request->type_consultation,
         ]);
 
