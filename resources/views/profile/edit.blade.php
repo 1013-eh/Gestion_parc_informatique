@@ -16,6 +16,7 @@
             <div class="bg-white shadow sm:rounded-lg overflow-hidden">
 
                 {{-- Header band with avatar --}}
+
                 <div class="bg-gradient-to-r from-yellow-500 to-yellow-400 px-6 py-8 sm:px-8">
                     <div class="flex items-center gap-4">
                         <div class="flex-shrink-0 h-16 w-16 rounded-full bg-white/10 border-2 border-white/30 flex items-center justify-center">
