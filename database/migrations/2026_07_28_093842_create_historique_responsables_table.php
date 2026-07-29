@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
 
             $table->integer('code_bureau');
-            $table->Integer('ancien_matricule');
-            $table->Integer('nouveau_matricule');
+            $table->Integer('ancien_matricule')->nullable(); // -- changed
+            $table->Integer('nouveau_matricule')->nullable(); // -- changed
 
             $table->timestamp('date_changement')->useCurrent();
 

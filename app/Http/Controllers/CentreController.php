@@ -13,6 +13,7 @@ class CentreController extends Controller
     public function index(Request $request)
     {
         $query = Centre::with(['region', 'responsable']);
+        $query = Centre::with(['region', 'responsable', 'Date_coupure']);
 
         if ($request->filled('region')) {
             $query->where('id_region', $request->region);
@@ -49,11 +50,8 @@ class CentreController extends Controller
     {
         $regions = Region::orderBy('libelle_region')->get();
 
-        // Uniquement les utilisateurs qui ne sont affectés à aucun centre
-        $users = User::whereDoesntHave('centre')
-            ->orderBy('nom')
-            ->orderBy('prenom')
-            ->get();
+        // Uniquement les utilisateurs qui ne sont affectés à aucun centre -- changed
+        $users = User::with('centre')->orderBy('matricule')->get();
 
         return view('centres.create', compact('regions', 'users'));
     }
@@ -73,7 +71,7 @@ class CentreController extends Controller
             'code_bureau' => 'required|integer|unique:centres,code_bureau',
             'nom_centre' => 'required|string|max:100',
             'id_region' => 'required|exists:regions,id_region',
-            'matricule' => 'required|exists:users,matricule|unique:centres,matricule',
+            'matricule' => 'required|exists:users,matricule',
             'adresse_ip' => [
                 'required',
                 'regex:/^(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)$/'
@@ -92,6 +90,25 @@ class CentreController extends Controller
             return back()
                 ->withInput()
                 ->with('ip_existante', true);
+        }
+
+        // -- changed
+        $oldCentre = Centre::where('matricule', $request->matricule)->first();
+        if ($oldCentre && !$request->boolean('confirm_change')) {
+            $user = User::find($request->matricule);
+            return back()
+                ->withInput()
+                ->with('responsable_create_change', true)
+                ->with('warning_message', "{$user->name} est actuellement responsable du centre {$oldCentre->nom_centre}. Il sera transféré vers ce nouveau centre. Confirmer ?");
+        }
+
+        if ($oldCentre) {
+            $oldCentre->update(['matricule' => null]);
+            HistoriqueResponsable::create([
+                'code_bureau'       => $oldCentre->code_bureau,
+                'ancien_matricule'  => $request->matricule,
+                'nouveau_matricule' => null,
+            ]);
         }
 
         Centre::create([
@@ -121,12 +138,8 @@ class CentreController extends Controller
 
         $regions = Region::orderBy('libelle_region')->get();
 
-        // Utilisateurs non affectés + responsable actuel
-        $users = User::whereDoesntHave('centre')
-            ->orWhere('matricule', $centre->matricule)
-            ->orderBy('nom')
-            ->orderBy('prenom')
-            ->get();
+        // Utilisateurs non affectés + responsable actuel -- changed
+        $users = User::with('centre')->orderBy('matricule')->get();
 
         return view('centres.edit', compact('centre', 'regions', 'users'));
     }
@@ -139,7 +152,7 @@ class CentreController extends Controller
             'code_bureau' => 'required|integer|unique:centres,code_bureau,' . $id . ',code_bureau',
             'nom_centre' => 'required|string|max:100',
             'id_region' => 'required|exists:regions,id_region',
-            'matricule' => 'required|exists:users,matricule|unique:centres,matricule,' . $id . ',code_bureau',
+            'matricule' => 'required|exists:users,matricule', // -- changed
             'adresse_ip' => [
                 'required',
                 'regex:/^(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)$/'
@@ -162,13 +175,43 @@ class CentreController extends Controller
                 ->with('ip_existante', true);
         }
 
-        if ($centre->matricule != $request->matricule) {
+        // -- changed
+        if ($centre->matricule != $request->matricule && $centre->matricule !== null && !$request->boolean('confirm_change') ) {
+            $oldUser = User::find($centre->matricule);
+            return back()
+                ->withInput()
+                ->with('responsable_change', true)
+                ->with('warning_message', "{$oldUser->name} sera retiré de ce centre et ne pourra plus se connecter jusqu'à ce qu'un nouveau centre lui soit assigné. Confirmer ?");
+        }
 
-            HistoriqueResponsable::create([
-                'code_bureau'      => $centre->code_bureau,
-                'ancien_matricule' => $centre->matricule,
-                'nouveau_matricule' => $request->matricule,
-            ]);
+        if ($centre->matricule != $request->matricule) {
+            // -- changed
+            $otherCentre = Centre::where('matricule', $request->matricule)
+                ->where('code_bureau', '!=', $centre->code_bureau)
+                ->first();
+            if ($otherCentre) {
+                $otherCentre->update(['matricule' => null]);
+                HistoriqueResponsable::create([
+                    'code_bureau'       => $otherCentre->code_bureau,
+                    'ancien_matricule'  => $request->matricule,
+                    'nouveau_matricule' => null,
+                ]);
+            }
+
+            // HistoriqueResponsable::create([
+            //     'code_bureau'      => $centre->code_bureau,
+            //     'ancien_matricule' => $centre->matricule,
+            //     'nouveau_matricule' => $request->matricule,
+            // ]);
+
+            // -- changed
+            if ($centre->matricule !== null) {
+                HistoriqueResponsable::create([
+                    'code_bureau'       => $centre->code_bureau,
+                    'ancien_matricule'  => $centre->matricule,
+                    'nouveau_matricule' => $request->matricule,
+                ]);
+            }
         }
 
         $centre->update([

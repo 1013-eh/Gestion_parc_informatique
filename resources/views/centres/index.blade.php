@@ -81,6 +81,7 @@
                                 <th class="px-6 py-3 text-left text-xs font-semibold text-white uppercase tracking-wider">Matricule</th>
                                 <th class="px-6 py-3 text-left text-xs font-semibold text-white uppercase tracking-wider">Adresse IP</th>
                                 <th class="px-6 py-3 text-left text-xs font-semibold text-white uppercase tracking-wider">Type</th>
+                                @if($isAdmin)<th class="px-6 py-3 text-center text-xs font-semibold text-white uppercase tracking-wider" style="width:160px">Date coupure de gestion</th>@endif
                                 @if($isAdmin)<th class="px-6 py-3 text-center text-xs font-semibold text-white uppercase tracking-wider" style="width:160px">Actions</th>@endif
                             </tr>
                         </thead>
@@ -104,6 +105,11 @@
                                         {{ $centre->type_consultation ?? 'N/A' }}
                                     </span>
                                 </td>
+                                @if($isAdmin)
+                                <td class="px-6 py-4 text-sm text-gray-700">
+                                    {{ $centre->Date_coupure?->date_changement ? \Carbon\Carbon::parse($centre->Date_coupure->date_changement)->format('d/m/Y H:i') : '—' }}
+                                </td>
+                                @endif
                                 @if($isAdmin)
                                 <td class="px-6 py-4 text-center text-sm">
                                     <div class="flex justify-center items-center space-x-3">

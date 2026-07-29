@@ -26,4 +26,10 @@ class Centre extends Model
     {
         return $this->belongsTo(User::class, 'matricule', 'matricule');
     }
+
+    public function Date_coupure()
+    {
+        return $this->hasOne(HistoriqueResponsable::class, 'code_bureau', 'code_bureau')
+            ->latest('date_changement');
+    }
 }

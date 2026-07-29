@@ -26,6 +26,9 @@
 
                         <input type="hidden" name="force_create" id="force_create" value="0">
 
+                        <!-- -- changed -->
+                        <input type="hidden" name="confirm_change" id="confirm_change" value="0">
+
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
                             <div class="mb-4">
@@ -90,8 +93,9 @@
                                         required>
                                     <option value="">-- Sélectionner un matricule --</option>
                                     @foreach($users as $user)
+                                        <!-- -- changed -->
                                         <option value="{{ $user->matricule }}" {{ old('matricule') == $user->matricule ? 'selected' : '' }}>
-                                            {{ $user->name }} ({{ $user->matricule }})
+                                            {{ $user->name }} ({{ $user->matricule }}){{ $user->centre ? ' — '.$user->centre->nom_centre : '' }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -170,6 +174,25 @@
         }).then((result) => {
             if (result.isConfirmed) {
                 document.getElementById('force_create').value = 1;
+                document.getElementById('centreForm').submit();
+            }
+        });
+    </script>
+    @endif
+
+    @if(session('responsable_create_change'))
+    <script>
+        Swal.fire({
+            title: 'Changement de responsable',
+            html: @json(session('warning_message')),
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Confirmer',
+            cancelButtonText: 'Annuler',
+            reverseButtons: true,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('confirm_change').value = 1;
                 document.getElementById('centreForm').submit();
             }
         });
