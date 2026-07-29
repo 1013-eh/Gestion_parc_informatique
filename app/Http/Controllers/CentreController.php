@@ -12,7 +12,6 @@ class CentreController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Centre::with(['region', 'responsable']);
         $query = Centre::with(['region', 'responsable', 'Date_coupure']);
 
         if ($request->filled('region')) {
