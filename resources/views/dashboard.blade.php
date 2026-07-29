@@ -9,11 +9,11 @@
         <div class="max-w-6xl mx-auto sm:px-6 lg:px-8 space-y-6">
 
             {{-- Welcome banner --}}
-            <div class="bg-blue-800 rounded-lg p-6 text-white">
+            <div class="bg-yellow-500 rounded-lg p-6 text-white">
                 <h3 class="text-lg font-semibold">
                     Bienvenue, {{ auth()->user()->prenom }} {{ auth()->user()->nom }}
                 </h3>
-                <p class="text-blue-100 text-sm mt-1">
+                <p class="text-white-100 text-sm mt-1">
                     @if($isGlobalView)
                         Vous consultez les données de l'ensemble des centres.
                     @else
